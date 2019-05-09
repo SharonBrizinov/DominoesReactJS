@@ -1,7 +1,7 @@
-import React, { Component } from "react";
+import React, { Component } from 'react';
 
 class Player extends Component {
-  constructor(props) {
+  constructor (props) {
     super(props);
     this.state = {
       turnCount: 0,
@@ -9,7 +9,8 @@ class Player extends Component {
       tileDeckHand: null,
     };
   }
-  render() {
+
+  render () {
     return (
       <div>
         <p> This is a player! </p>
@@ -17,4 +18,5 @@ class Player extends Component {
     );
   }
 }
+
 export default Player;

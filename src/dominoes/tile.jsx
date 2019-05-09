@@ -1,7 +1,7 @@
-import React, { Component } from "react";
+import React, { Component } from 'react';
 
 class Tile extends Component {
-  constructor(props) {
+  constructor (props) {
     super(props);
     this.state = {
       rSideNum: this.props.rSideNum,
@@ -11,19 +11,21 @@ class Tile extends Component {
     this.onClickHandler = this.onClickHandler.bind(this);
   }
 
-  onClickHandler() {
+  onClickHandler () {
   }
 
-  render() {
+  render () {
     const divStyle = {
       border: '1px solid black',
     };
 
     return (
       <div style={divStyle} onClick={this.onClickHandler}>
-        <p> This is a tile | rSide: {this.state.rSideNum} | lSideNum: {this.state.lSideNum} | direction: {this.state.direction}</p>
+        <p> This is a tile | rSide: {this.state.rSideNum} | lSideNum: {this.state.lSideNum} |
+          direction: {this.state.direction}</p>
       </div>
     );
   }
 }
+
 export default Tile;

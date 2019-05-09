@@ -1,12 +1,12 @@
-import React, { Component } from "react";
+import React, { Component } from 'react';
 
 class Board extends Component {
-  constructor(props) {
+  constructor (props) {
     super(props);
-    this.state = {
-    };
+    this.state = {};
   }
-  render() {
+
+  render () {
     return (
       <div>
         <p> This is a board! </p>
@@ -14,4 +14,5 @@ class Board extends Component {
     );
   }
 }
+
 export default Board;

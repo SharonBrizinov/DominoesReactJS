@@ -1,14 +1,14 @@
-import React, { Component } from "react";
-import Board from "./board.jsx";
-import Player from "./player.jsx";
-import Tile from "./tile.jsx";
-import TileDeck from "./tileDeck.jsx";
-import {UP, DOWN, LEFT, RIGHT} from "./consts.jsx"
+import React, { Component } from 'react';
+import Board from './board.jsx';
+import Player from './player.jsx';
+import Tile from './tile.jsx';
+import TileDeck from './tileDeck.jsx';
+import { UP, DOWN, LEFT, RIGHT } from './consts.jsx';
 
-import "./game.css";
+import './game.css';
 
 class Game extends Component {
-  constructor(props) {
+  constructor (props) {
     super(props);
     this.state = {
       turnCount: 0,
@@ -17,19 +17,21 @@ class Game extends Component {
       tileDeckBank: null,
     };
   }
-  render() {
+
+  render () {
     return (
       <div>
         <p> This is a game! </p>
-        <Board />
-        <br />
-        <Player />
-        <br />
+        <Board/>
+        <br/>
+        <Player/>
+        <br/>
         <Tile rSideNum={4} lSideNum={3} direction={UP}/>
-        <br />
-        <TileDeck />
+        <br/>
+        <TileDeck/>
       </div>
     );
   }
 }
+
 export default Game;

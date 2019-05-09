@@ -1,13 +1,14 @@
-import React, { Component } from "react";
+import React, { Component } from 'react';
 
 class TileDeck extends Component {
-  constructor(props) {
+  constructor (props) {
     super(props);
     this.state = {
       arrTiles: [],
     };
   }
-  render() {
+
+  render () {
     return (
       <div>
         <p> This is a tile deck! </p>
@@ -15,4 +16,5 @@ class TileDeck extends Component {
     );
   }
 }
+
 export default TileDeck;
