@@ -1,11 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import Example from './example/example.jsx';
+import Game from './dominoes/game.jsx';
 
 const App = () => (
     <div>
-        <Example />       
+        <Game />
     </div>
 );
 
