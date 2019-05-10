@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import Game from './dominoes/game.jsx';
+import Game from './game/game.jsx';
 
 const App = () => (
     <div>

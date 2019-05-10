@@ -1,0 +1,27 @@
+.tile {
+    border-radius: 5px;
+    border: 1px solid black;
+    padding: 4px;
+}
+
+.tile hr {
+    border: 1px solid black;
+    margin: 0;
+    padding: 0;
+    border-radius: 1px;
+}
+
+.vertical-tile {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 60px;
+    height: 120px;
+}
+
+.horizontal-tile {
+    display: flex;
+    justify-content: center;
+    width: 120px;
+    height: 60px;
+}
