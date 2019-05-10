@@ -11,7 +11,6 @@ const DotContainer = ({dotsNumber}) => {
       {
         Array.from(Array(MAX_DOTS).keys()).map((num,i) => {
           const dotExtraAttr = {['dot-number']: i};
-          console.log(i);
           return <div key={i} {...dotExtraAttr} className={'dot'}/>;
         })
       }

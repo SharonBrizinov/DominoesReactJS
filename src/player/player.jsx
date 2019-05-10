@@ -1,19 +1,26 @@
 import React, { Component } from 'react';
+import './player.css';
+import img from '../images/hipster.png';
 
 class Player extends Component {
   constructor (props) {
     super(props);
     this.state = {
-      turnCount: 0,
-      game: null,
-      tileDeckHand: null,
+      id: props.id,
+      game: props.game,
+      name: props.name
     };
   }
 
   render () {
     return (
-      <div>
-        <p> This is a player! </p>
+      <div className='player' data-id={this.state.id}>
+        <div className='details'>
+          <div className='title'>{this.state.name}</div>
+          <div className='avatar'>
+            <img src={img}/>
+          </div>
+        </div>
       </div>
     );
   }

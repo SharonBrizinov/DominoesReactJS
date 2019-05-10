@@ -1,0 +1,39 @@
+.player {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    height: 90px;
+    background-color: rgb(151, 178, 205);
+    transition: height 450ms ease-in-out 16ms;
+    border-radius: 9px 9px 0 0;
+    margin-left: -250px;
+    font-size: 17px;
+    width: 500px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 8px;
+}
+
+.player .details {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    height: 100%;
+}
+
+.player .title {
+    text-align: left;
+}
+
+.player .avatar {
+    vertical-align: middle;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+}
+
+.player .avatar img {
+    width: 50px;
+    height: 50px;
+}

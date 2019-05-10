@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-import Tile from '../tile/tile.jsx';
-import { DIRECTIONS } from '../consts.jsx';
+import Board from '../board/board.jsx';
+import Player from '../player/player.jsx';
+import { DIRECTIONS } from '../consts.js';
 
 import './game.css';
 
@@ -12,15 +13,15 @@ class Game extends Component {
       currentPlayer: null,
       board: null,
       tileDeckBank: null,
+      players: []
     };
   }
 
   render () {
     return (
-      <div>
-        <Tile rightSideNum={1} leftSideNum={2} direction={DIRECTIONS.vertical}/>
-        <Tile rightSideNum={3} leftSideNum={4} direction={DIRECTIONS.vertical}/>
-        <Tile rightSideNum={5} leftSideNum={6} direction={DIRECTIONS.vertical}/>
+      <div className='game'>
+        <Board />
+        <Player name='Player 1' id={0}/>
       </div>
     );
   }
