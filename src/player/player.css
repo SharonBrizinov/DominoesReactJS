@@ -10,9 +10,18 @@
     font-size: 17px;
     width: 500px;
     display: flex;
-    flex-direction: column;
-    justify-content: center;
+    align-items:flex-end;
     padding: 8px;
+}
+
+.player .cards {
+     width: 80%;
+     height: 150%;
+     display: flex;
+ }
+
+.player .cards .tile {
+    margin: 0 2px 0 2px;
 }
 
 .player .details {
@@ -20,6 +29,7 @@
     flex-direction: column;
     justify-content: space-around;
     height: 100%;
+    width: 20%
 }
 
 .player .title {
