@@ -22,46 +22,46 @@
 }
 
 /* -- 1 -- */
-.dot-container[dots-number="1"] .dot[dot-number="4"] {
+.dot-container[dots-number="1"] .dot[dot-index="4"] {
     background-color: black;
 }
 
 /* --2-- */
-.dot-container[dots-number="2"] .dot[dot-number="0"],
-.dot-container[dots-number="2"] .dot[dot-number="8"]{
+.dot-container[dots-number="2"] .dot[dot-index="0"],
+.dot-container[dots-number="2"] .dot[dot-index="8"]{
     background-color: black;
 }
 
 /* --3-- */
-.dot-container[dots-number="3"] .dot[dot-number="0"],
-.dot-container[dots-number="3"] .dot[dot-number="4"],
-.dot-container[dots-number="3"] .dot[dot-number="8"]{
+.dot-container[dots-number="3"] .dot[dot-index="0"],
+.dot-container[dots-number="3"] .dot[dot-index="4"],
+.dot-container[dots-number="3"] .dot[dot-index="8"]{
     background-color: black;
 }
 
 /* --4-- */
-.dot-container[dots-number="4"] .dot[dot-number="0"],
-.dot-container[dots-number="4"] .dot[dot-number="2"],
-.dot-container[dots-number="4"] .dot[dot-number="6"],
-.dot-container[dots-number="4"] .dot[dot-number="8"]{
+.dot-container[dots-number="4"] .dot[dot-index="0"],
+.dot-container[dots-number="4"] .dot[dot-index="2"],
+.dot-container[dots-number="4"] .dot[dot-index="6"],
+.dot-container[dots-number="4"] .dot[dot-index="8"]{
     background-color: black;
 }
 
 /* --5-- */
-.dot-container[dots-number="5"] .dot[dot-number="0"],
-.dot-container[dots-number="5"] .dot[dot-number="2"],
-.dot-container[dots-number="5"] .dot[dot-number="4"],
-.dot-container[dots-number="5"] .dot[dot-number="6"],
-.dot-container[dots-number="5"] .dot[dot-number="8"]{
+.dot-container[dots-number="5"] .dot[dot-index="0"],
+.dot-container[dots-number="5"] .dot[dot-index="2"],
+.dot-container[dots-number="5"] .dot[dot-index="4"],
+.dot-container[dots-number="5"] .dot[dot-index="6"],
+.dot-container[dots-number="5"] .dot[dot-index="8"]{
     background-color: black;
 }
 
 /* --6-- */
-.dot-container[dots-number="6"] .dot[dot-number="0"],
-.dot-container[dots-number="6"] .dot[dot-number="2"],
-.dot-container[dots-number="6"] .dot[dot-number="3"],
-.dot-container[dots-number="6"] .dot[dot-number="5"],
-.dot-container[dots-number="6"] .dot[dot-number="6"],
-.dot-container[dots-number="6"] .dot[dot-number="8"]{
+.dot-container[dots-number="6"] .dot[dot-index="0"],
+.dot-container[dots-number="6"] .dot[dot-index="2"],
+.dot-container[dots-number="6"] .dot[dot-index="3"],
+.dot-container[dots-number="6"] .dot[dot-index="5"],
+.dot-container[dots-number="6"] .dot[dot-index="6"],
+.dot-container[dots-number="6"] .dot[dot-index="8"]{
     background-color: black;
 }
