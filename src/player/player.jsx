@@ -23,10 +23,10 @@ class Player extends Component {
             <img src={img}/>
           </div>
         </div>
-        <div className='cards'>
-          <Tile rightSideNum={1} leftSideNum={2} direction={DIRECTIONS.vertical}/>
-          <Tile rightSideNum={3} leftSideNum={4} direction={DIRECTIONS.vertical}/>
-          <Tile rightSideNum={5} leftSideNum={6} direction={DIRECTIONS.vertical}/>
+        <div className='hand-deck'>
+          <Tile tileId={0} rightSideNum={1} leftSideNum={2} direction={DIRECTIONS.vertical}/>
+          <Tile tileId={1} rightSideNum={3} leftSideNum={4} direction={DIRECTIONS.vertical}/>
+          <Tile tileId={2} rightSideNum={5} leftSideNum={6} direction={DIRECTIONS.vertical}/>
         </div>
       </div>
     );

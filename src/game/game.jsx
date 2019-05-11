@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 import Board from '../board/board.jsx';
 import Player from '../player/player.jsx';
-import { DIRECTIONS } from '../consts.js';
-
+import { DIRECTIONS, PLAYER_DECK_COUNT, GAME_BANK_DECK_COUNT } from '../consts.js';
 import './game.css';
 
 class Game extends Component {

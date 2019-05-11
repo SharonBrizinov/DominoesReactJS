@@ -7,6 +7,7 @@ class Tile extends Component {
     super(props);
 
     this.state = {
+      tileId: this.props.tileId,
       rightSideNum: this.props.rightSideNum,
       leftSideNum: this.props.leftSideNum,
       direction: this.props.direction,
@@ -20,7 +21,7 @@ class Tile extends Component {
 
   render () {
     return (
-      <div className={`tile ${this.state.direction}-tile`} onClick={this.onClickHandler}>
+      <div className={`tile ${this.state.direction}-tile`} onClick={this.onClickHandler} id={this.tileId} draggable>
         <DotContainer dotsNumber={this.state.leftSideNum}/>
         <hr/>
         <DotContainer dotsNumber={this.state.rightSideNum}/>

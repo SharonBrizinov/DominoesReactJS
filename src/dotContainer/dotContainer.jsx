@@ -3,6 +3,18 @@ import './dotContainer.css'
 
 const MAX_DOTS = 9;
 
+/*
+Number: 3
+Indices: 0, 4, 8
+-------------
+| X |   |   |
+-------------
+|   | X |   |
+-------------
+|   |   | X |
+-------------
+*/
+
 const DotContainer = ({dotsNumber}) => {
   const extraAttrs = {['dots-number']: dotsNumber};
 
