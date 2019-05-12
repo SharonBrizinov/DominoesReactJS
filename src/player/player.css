@@ -14,13 +14,13 @@
     padding: 8px;
 }
 
-.player .cards {
+.player .hand-deck {
      width: 80%;
      height: 150%;
      display: flex;
  }
 
-.player .cards .tile {
+.player .hand-deck .tile {
     margin: 0 2px 0 2px;
     cursor: pointer;
 }
