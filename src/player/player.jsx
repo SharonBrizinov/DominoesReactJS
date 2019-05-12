@@ -9,13 +9,7 @@ class Player extends Component {
     super(props);
     this.state = {
       id: props.id,
-      game: props.game,
       name: props.name,
-      tiles: [
-        {rightSideNum: 1, leftSideNum: 2},
-        {rightSideNum: 4, leftSideNum: 6},
-        {rightSideNum: 4, leftSideNum: 6}
-      ]
     };
   }
 
@@ -28,13 +22,16 @@ class Player extends Component {
             <img src={img}/>
           </div>
         </div>
-        <div className='cards'>
+        <div className='hand-deck'>
           {
-            this.state.tiles.map(
-              (tile, i) =>
+            this.props.tiles.map(
+              (tile, index) =>
+                !tile.used &&
                 <Tile
-                  key={i}
-                  boardRef={this.props.boardRef}
+                  key={index}
+                  index={index}
+                  draggable
+                  onTileStartDragging={this.props.onTileStartDragging}
                   rightSideNum={tile.rightSideNum}
                   leftSideNum={tile.leftSideNum}
                   direction={DIRECTIONS.vertical}

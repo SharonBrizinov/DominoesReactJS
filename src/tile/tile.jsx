@@ -1,44 +1,21 @@
-import React, { Component } from 'react';
-import DotContainer from '../dotContainer/dotContainer.jsx'
+import React from 'react';
+import DotContainer from '../dotContainer/dotContainer.jsx';
 import './tile.css';
 
-class Tile extends Component {
-  constructor (props) {
-    super(props);
-
-    this.state = {
-      rightSideNum: this.props.rightSideNum,
-      leftSideNum: this.props.leftSideNum,
-      direction: this.props.direction
-    };
-
-    this.onClickHandler = this.onClickHandler.bind(this);
-  }
-
-  onClickHandler () {
-  }
-
-  onDrag (e, tile) {
-    this.props.boardRef.current.setDraggedTile(tile);
-    e.preventDefault();
-    // console.log('onDrag');
-    // console.log(e,name)
-  }
-
-  render () {
-    return (
-      <div className={`tile`}
-           direction={this.state.direction}
-           onClick={this.onClickHandler}
-           onDrag={(event) => this.onDrag(event, this)}
-           draggable
-      >
-        <DotContainer dotsNumber={this.state.leftSideNum}/>
-        <hr/>
-        <DotContainer dotsNumber={this.state.rightSideNum}/>
-      </div>
-    );
-  }
+function Tile ({draggable, index, rightSideNum, leftSideNum, direction, onTileStartDragging}) {
+  return (
+    <div aba={index} className={'tile'}
+         direction={direction}
+         onMouseDown={() => {
+           draggable && onTileStartDragging({rightSideNum, leftSideNum, index});
+         }}
+         draggable={draggable}
+    >
+      <DotContainer dotsNumber={leftSideNum}/>
+      <hr/>
+      <DotContainer dotsNumber={rightSideNum}/>
+    </div>
+  );
 }
 
 export default Tile;

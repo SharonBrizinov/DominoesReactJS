@@ -6,10 +6,6 @@
     transition: transform .2s;
 }
 
-.tile:hover {
-    transform: scale(1.1);
-  }
-
 .tile hr {
     border: 1px solid black;
     margin: 0;

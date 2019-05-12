@@ -4,21 +4,20 @@
     left: 50%;
     height: 90px;
     background-color: rgb(151, 178, 205);
-    transition: height 450ms ease-in-out 16ms;
     border-radius: 9px 9px 0 0;
     margin-left: -250px;
     font-size: 17px;
     width: 500px;
     display: flex;
-    align-items:flex-end;
+    align-items: flex-end;
     padding: 8px;
 }
 
 .player .hand-deck {
-     width: 80%;
-     height: 150%;
-     display: flex;
- }
+    width: 80%;
+    height: 150%;
+    display: flex;
+}
 
 .player .hand-deck .tile {
     margin: 0 2px 0 2px;
@@ -47,4 +46,8 @@
 .player .avatar img {
     width: 50px;
     height: 50px;
+}
+
+.player .hand-deck .tile:hover {
+    transform: scale(1.1);
 }
