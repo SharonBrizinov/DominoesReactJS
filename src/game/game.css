@@ -1,6 +1,0 @@
-.game {
-    font-family: Verdana,Geneva,sans-serif;
-    display: grid;
-    grid-template-columns: repeat(23, 60px);
-    grid-template-rows: repeat(12, 60px);
-}

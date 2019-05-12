@@ -9,7 +9,7 @@ class Tile extends Component {
     this.state = {
       rightSideNum: this.props.rightSideNum,
       leftSideNum: this.props.leftSideNum,
-      direction: this.props.direction,
+      direction: this.props.direction
     };
 
     this.onClickHandler = this.onClickHandler.bind(this);
@@ -18,9 +18,21 @@ class Tile extends Component {
   onClickHandler () {
   }
 
+  onDrag (e, tile) {
+    this.props.boardRef.current.setDraggedTile(tile);
+    e.preventDefault();
+    // console.log('onDrag');
+    // console.log(e,name)
+  }
+
   render () {
     return (
-      <div className={`tile ${this.state.direction}-tile`} onClick={this.onClickHandler}>
+      <div className={`tile`}
+           direction={this.state.direction}
+           onClick={this.onClickHandler}
+           onDrag={(event) => this.onDrag(event, this)}
+           draggable
+      >
         <DotContainer dotsNumber={this.state.leftSideNum}/>
         <hr/>
         <DotContainer dotsNumber={this.state.rightSideNum}/>

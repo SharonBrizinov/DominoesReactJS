@@ -12,7 +12,7 @@
     border-radius: 1px;
 }
 
-.vertical-tile {
+.tile[direction="vertical"] {
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -20,7 +20,7 @@
     height: 120px;
 }
 
-.horizontal-tile {
+.tile[direction="horizontal"]{
     display: flex;
     justify-content: center;
     width: 120px;

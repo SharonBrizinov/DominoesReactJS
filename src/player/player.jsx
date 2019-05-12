@@ -10,7 +10,12 @@ class Player extends Component {
     this.state = {
       id: props.id,
       game: props.game,
-      name: props.name
+      name: props.name,
+      tiles: [
+        {rightSideNum: 1, leftSideNum: 2},
+        {rightSideNum: 4, leftSideNum: 6},
+        {rightSideNum: 4, leftSideNum: 6}
+      ]
     };
   }
 
@@ -24,9 +29,18 @@ class Player extends Component {
           </div>
         </div>
         <div className='cards'>
-          <Tile rightSideNum={1} leftSideNum={2} direction={DIRECTIONS.vertical}/>
-          <Tile rightSideNum={3} leftSideNum={4} direction={DIRECTIONS.vertical}/>
-          <Tile rightSideNum={5} leftSideNum={6} direction={DIRECTIONS.vertical}/>
+          {
+            this.state.tiles.map(
+              (tile, i) =>
+                <Tile
+                  key={i}
+                  boardRef={this.props.boardRef}
+                  rightSideNum={tile.rightSideNum}
+                  leftSideNum={tile.leftSideNum}
+                  direction={DIRECTIONS.vertical}
+                />
+            )
+          }
         </div>
       </div>
     );

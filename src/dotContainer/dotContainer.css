@@ -6,12 +6,12 @@
     align-items: center;
 }
 
-.vertical-tile .dot-container {
+.tile[direction="vertical"] .dot-container {
     width: 100%;
     height: 50%;
 }
 
-.horizontal-tile .dot-container {
+.tile[direction="horizontal"] .dot-container {
     width: 50%;
     height: 100%;
 }

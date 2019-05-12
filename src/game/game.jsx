@@ -8,6 +8,7 @@ import './game.css';
 class Game extends Component {
   constructor (props) {
     super(props);
+    this.boardRef = React.createRef();
     this.state = {
       turnCount: 0,
       currentPlayer: null,
@@ -20,8 +21,8 @@ class Game extends Component {
   render () {
     return (
       <div className='game'>
-        <Board />
-        <Player name='Player 1' id={0}/>
+        <Board ref={this.boardRef}/>
+        <Player boardRef={this.boardRef} name='Player 1' id={0}/>
       </div>
     );
   }
