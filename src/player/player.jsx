@@ -26,7 +26,7 @@ class Player extends Component {
           {
             this.props.tiles.map(
               (tile, index) =>
-                !tile.used &&
+                tile && !tile.used &&
                 <Tile
                   key={index}
                   index={index}
