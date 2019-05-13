@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import './player.css';
-import img from '../images/hipster.png';
+import imgAvatar from '../images/hipster.png';
 import Tile from '../tile/tile.jsx';
 import { DIRECTIONS } from '../consts';
 
@@ -10,6 +10,7 @@ class Player extends Component {
     this.state = {
       id: props.id,
       name: props.name,
+      score: props.score,
     };
   }
 
@@ -18,8 +19,9 @@ class Player extends Component {
       <div className='player' data-id={this.state.id}>
         <div className='details'>
           <div className='title'>{this.state.name}</div>
+          <div className='score'>{`Score: ${this.state.score}`}</div>
           <div className='avatar'>
-            <img src={img}/>
+            <img src={imgAvatar}/>
           </div>
         </div>
         <div className='hand-deck'>

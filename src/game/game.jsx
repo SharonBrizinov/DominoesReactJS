@@ -11,7 +11,7 @@ class Game extends Component {
   constructor (props) {
     super(props);
     const emptyBankTiles = this.initTilesBank();
-    const initializedPlayers = [{name: 'Player 1', tiles: []}];
+    const initializedPlayers = [{name: 'Player 1', tiles: [], score: 0}];
     const {bankTiles, players} = this.setPlayerInitTiles(initializedPlayers, emptyBankTiles);
 
     this.state = {
@@ -89,7 +89,8 @@ class Game extends Component {
             return <Player key={`player-${i}`}
                            name='Player 1' id={i}
                            tiles={player.tiles}
-                           onTileStartDragging={this.onTileStartDragging}/>;
+                           onTileStartDragging={this.onTileStartDragging}
+                           score={player.score}/>;
           })
         }
       </div>
