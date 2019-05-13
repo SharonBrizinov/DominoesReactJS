@@ -32,7 +32,8 @@
     width: 20%
 }
 
-.player .title {
+.player .title
+.player .score {
     text-align: left;
 }
 

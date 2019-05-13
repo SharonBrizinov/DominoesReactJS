@@ -22,7 +22,8 @@ class Game extends Component {
           {rightSideNum: 2, leftSideNum: 3, used: false},
           {rightSideNum: 4, leftSideNum: 5, used: false},
           {rightSideNum: 5, leftSideNum: 6, used: false}
-        ]
+        ],
+        score: 0,
       }]
     };
 
@@ -44,6 +45,13 @@ class Game extends Component {
     cells[droppedCellIndex].tile = {rightSideNum, leftSideNum, direction: DIRECTIONS.horizontal, draggable: false};
     tiles[index].used = true;
     this.setState((prevState) => ({cells, players}));
+
+    // TODO:
+    // 1. Check that it's allowed to place tile here
+    // 2. Increase player's score by 1.
+    // 3. Check game over (28 tiles on the board)
+    // 4.   Show pop-up
+    // 5. Update game status (for reverse move)
   }
 
   getCurrentPlayerIndex () {
@@ -59,7 +67,8 @@ class Game extends Component {
             return <Player key={`player-${i}`}
                            name='Player 1' id={i}
                            tiles={player.tiles}
-                           onTileStartDragging={this.onTileStartDragging}/>;
+                           onTileStartDragging={this.onTileStartDragging}
+                           score={player.score}/>;
           })
         }
       </div>
