@@ -18,9 +18,9 @@ class Game extends Component {
       players: [{
         name: 'Player 1',
         tiles: [
-          {rightSideNum: 1, leftSideNum: 2, used: false},
-          {rightSideNum: 4, leftSideNum: 6, used: false},
-          {rightSideNum: 0, leftSideNum: 3, used: false},
+          {rightSideNum: 0, leftSideNum: 1, used: false},
+          {rightSideNum: 2, leftSideNum: 3, used: false},
+          {rightSideNum: 4, leftSideNum: 5, used: false},
           {rightSideNum: 5, leftSideNum: 6, used: false}
         ]
       }]
@@ -41,7 +41,7 @@ class Game extends Component {
     const {tiles} = players[this.getCurrentPlayerIndex()];
     const {rightSideNum, leftSideNum, index} = this.state.draggedTile;
 
-    cells[droppedCellIndex].tile = {rightSideNum, leftSideNum, direction: DIRECTIONS.vertical, draggable: false};
+    cells[droppedCellIndex].tile = {rightSideNum, leftSideNum, direction: DIRECTIONS.horizontal, draggable: false};
     tiles[index].used = true;
     this.setState((prevState) => ({cells, players}));
   }
