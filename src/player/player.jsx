@@ -19,10 +19,13 @@ class Player extends Component {
       <div className='player' data-id={this.state.id}>
         <div className='details'>
           <div className='title'>{this.state.name}</div>
-          <div className='score'>{`Score: ${this.state.score}`}</div>
+          <div className='score'>{`Score: ${this.props.score}`}</div>
           <div className='avatar'>
             <img src={imgAvatar}/>
           </div>
+          <button className='get-tile' onClick={() => alert('click')}>
+            {`Get Tile`}
+          </button>
         </div>
         <div className='hand-deck'>
           {

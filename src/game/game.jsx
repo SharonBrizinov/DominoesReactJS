@@ -36,9 +36,13 @@ class Game extends Component {
   }
 
   onTileDropped (droppedCellIndex) {
+    const indexCurrentPlayer = this.getCurrentPlayerIndex();
     const {cells, players} = this.state;
-    const {tiles} = players[this.getCurrentPlayerIndex()];
+    const {tiles} = players[indexCurrentPlayer];
     const {rightSideNum, leftSideNum, index} = this.state.draggedTile;
+
+    // Update score
+    players[indexCurrentPlayer].score += 1;
 
     cells[droppedCellIndex].tile = {
       rightSideNum,
