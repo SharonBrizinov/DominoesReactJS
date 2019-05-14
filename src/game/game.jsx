@@ -1,11 +1,8 @@
 import React, { Component } from 'react';
 import Board from '../board/board.jsx';
 import Player from '../player/player.jsx';
-import { DIRECTIONS, PLAYER_DECK_COUNT, GAME_BANK_DECK_COUNT } from '../consts.js';
+import { DIRECTIONS, MAX_TILE_DOT_NUMBER, INIT_PLAYER_TILES } from '../consts.js';
 import './game.css';
-
-const MAX_TILE_DOT_NUMBER = 6;
-const INIT_PLAYER_TILES = 6;
 
 class Game extends Component {
   constructor (props) {
@@ -25,6 +22,7 @@ class Game extends Component {
       players: players
     };
 
+    this.getTileFromBank = this.getTileFromBank.bind(this)
     this.onTileStartDragging = this.onTileStartDragging.bind(this);
     this.onTileDropped = this.onTileDropped.bind(this);
   }
@@ -58,6 +56,17 @@ class Game extends Component {
     return this.state.turnCount % 1;
   }
 
+  popRandomTile(tilesArr) {
+    if (tilesArr.length > 0) {
+      const randomIndex = Math.floor(Math.random() * tilesArr.length);
+      let tile = tilesArr.splice(randomIndex, 1)[0];
+      return tile;
+    } else {
+      alert('No more tiles !');
+      return null;
+    }
+  }
+
   initTilesBank () {
     const bankTiles = [];
     for (let i = 0; i <= MAX_TILE_DOT_NUMBER; i++) {
@@ -65,8 +74,17 @@ class Game extends Component {
         bankTiles.push({rightSideNum: i, leftSideNum: j, used: false},);
       }
     }
-
     return bankTiles;
+  }
+
+  getTileFromBank () {
+    const indexCurrentPlayer = this.getCurrentPlayerIndex();
+    const {bankTiles, players} = this.state;
+    const {tiles} = players[indexCurrentPlayer];
+  
+    // Push tile from bank to player's hand
+    tiles.push(this.popRandomTile(bankTiles));
+    this.setState((prevState) => ({bankTiles, players}));
   }
 
   setPlayerInitTiles (players, bankTiles) {
@@ -74,10 +92,8 @@ class Game extends Component {
       const playerTiles = players[i].tiles;
 
       for (let i = 0; i < INIT_PLAYER_TILES; i++) {
-        const bankTilesSize = bankTiles.length;
-        const randomIndex = Math.floor(Math.random() * bankTilesSize);
-        playerTiles.push(bankTiles[randomIndex]);
-        bankTiles.splice(randomIndex, 1);
+        // Push tile from bank to player's hand
+        playerTiles.push(this.popRandomTile(bankTiles));
       }
     });
 
@@ -91,10 +107,11 @@ class Game extends Component {
         {
           this.state.players.map((player, i) => {
             return <Player key={`player-${i}`}
-                           name='Player 1' id={i}
+                           name={player.name} id={i}
                            tiles={player.tiles}
                            onTileStartDragging={this.onTileStartDragging}
-                           score={player.score}/>;
+                           score={player.score}
+                           getTileFromBank={this.getTileFromBank}/>;
           })
         }
       </div>

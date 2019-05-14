@@ -23,7 +23,7 @@ class Player extends Component {
           <div className='avatar'>
             <img src={imgAvatar}/>
           </div>
-          <button className='get-tile' onClick={() => alert('click')}>
+          <button className='get-tile' onClick={() => this.props.getTileFromBank()}>
             {`Get Tile`}
           </button>
         </div>
