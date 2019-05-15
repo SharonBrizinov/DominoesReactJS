@@ -19,12 +19,30 @@ class Game extends Component {
       }),
       draggedTile: null,
       bankTiles: bankTiles,
-      players: players
+      players: players,
+      stateHistory: []
     };
 
     this.getTileFromBank = this.getTileFromBank.bind(this)
     this.onTileStartDragging = this.onTileStartDragging.bind(this);
     this.onTileDropped = this.onTileDropped.bind(this);
+  }
+
+  goBackHistory() {
+    if (this.state.stateHistory.length === 0){
+      return;
+    }
+    // Get previous saved state
+    let lastState = this.state.stateHistory.pop();
+    this.setState({...lastState});
+  }
+
+  // Will update history with current state
+  updateHistory() {
+    let newState = JSON.parse(JSON.stringify(this.state)); // TODO: find a better way to deepcopy
+    let clonedHistory = this.state.stateHistory.splice();
+    clonedHistory.push(newState);
+    this.setState({stateHistory : clonedHistory})
   }
 
   onTileStartDragging (draggedTile) {
@@ -34,6 +52,9 @@ class Game extends Component {
   }
 
   onTileDropped (droppedCellIndex) {
+    // Save current state, before any modifications
+    this.updateHistory();
+
     const indexCurrentPlayer = this.getCurrentPlayerIndex();
     const {cells, players} = this.state;
     const {tiles} = players[indexCurrentPlayer];
@@ -78,6 +99,9 @@ class Game extends Component {
   }
 
   getTileFromBank () {
+    // Save current state, before any modifications
+    this.updateHistory();
+
     const indexCurrentPlayer = this.getCurrentPlayerIndex();
     const {bankTiles, players} = this.state;
     const {tiles} = players[indexCurrentPlayer];
@@ -101,6 +125,7 @@ class Game extends Component {
   }
 
   render () {
+    console.log(this.state);
     return (
       <div className='game'>
         <Board cells={this.state.cells} onTileDropped={this.onTileDropped}/>
@@ -114,6 +139,9 @@ class Game extends Component {
                            getTileFromBank={this.getTileFromBank}/>;
           })
         }
+        <button className='history-back' onClick={() => this.goBackHistory()} disabled={this.state.stateHistory.length===0}>
+          {`Undo`}
+        </button>
       </div>
     );
   }
