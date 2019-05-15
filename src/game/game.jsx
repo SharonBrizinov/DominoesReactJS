@@ -26,6 +26,14 @@ class Game extends Component {
     this.getTileFromBank = this.getTileFromBank.bind(this)
     this.onTileStartDragging = this.onTileStartDragging.bind(this);
     this.onTileDropped = this.onTileDropped.bind(this);
+    this.handleKeyDown = this.handleKeyDown.bind(this);
+  }
+
+  handleKeyDown(event) {
+    let charCode = String.fromCharCode(event.which).toLowerCase();
+    if((event.ctrlKey || event.metaKey) && charCode === 'z') {
+      this.goBackHistory();
+    }
   }
 
   goBackHistory() {
@@ -125,9 +133,8 @@ class Game extends Component {
   }
 
   render () {
-    console.log(this.state);
     return (
-      <div className='game'>
+      <div className='game' onKeyDown={this.handleKeyDown}>
         <Board cells={this.state.cells} onTileDropped={this.onTileDropped}/>
         {
           this.state.players.map((player, i) => {
