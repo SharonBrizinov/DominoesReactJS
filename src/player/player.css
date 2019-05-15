@@ -7,10 +7,9 @@
     border-radius: 9px 9px 0 0;
     margin-left: -250px;
     font-size: 17px;
-    width: 500px;
     display: flex;
     align-items: flex-end;
-    padding: 8px;
+    padding: 8px 8px 25px 8px;
 }
 
 .player .hand-deck {
@@ -29,10 +28,10 @@
     flex-direction: column;
     justify-content: space-around;
     height: 100%;
-    width: 20%
+    margin-right: 10px;
 }
 
-.player .title
+.player .title,
 .player .score {
     text-align: left;
 }
