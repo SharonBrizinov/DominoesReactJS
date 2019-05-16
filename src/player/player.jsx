@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import './player.css';
 import imgAvatar from '../images/hipster.png';
 import Tile from '../tile/tile.jsx';
-import { DIRECTIONS } from '../consts';
+import { DIRECTIONS, MAX_PLAYER_HAND_TILES } from '../consts';
 
 class Player extends Component {
   constructor (props) {
@@ -12,6 +12,12 @@ class Player extends Component {
       name: props.name,
       score: props.score,
     };
+  }
+  getUnusedTiles () {
+    return this.props.tiles.filter((tile) => {return !tile.used});
+  }
+  isAllowedToGetMoreTiles() {
+    return this.getUnusedTiles().length < MAX_PLAYER_HAND_TILES;
   }
 
   render () {
@@ -23,7 +29,7 @@ class Player extends Component {
           <div className='avatar'>
             <img src={imgAvatar}/>
           </div>
-          <button className='get-tile' onClick={() => this.props.getTileFromBank()}>
+          <button className='get-tile' onClick={() => this.props.getTileFromBank()} disabled={!this.isAllowedToGetMoreTiles()}>
             {`Get Tile`}
           </button>
         </div>

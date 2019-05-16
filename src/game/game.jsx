@@ -20,7 +20,8 @@ class Game extends Component {
       draggedTile: null,
       bankTiles: bankTiles,
       players: players,
-      stateHistory: []
+      stateHistory: [],
+      isGameEnded: false
     };
 
     this.getTileFromBank = this.getTileFromBank.bind(this)
@@ -59,6 +60,25 @@ class Game extends Component {
     });
   }
 
+  checkGameEnded() {
+    let allTilesInGame = [];
+    let isGameEnded = false;
+
+    // Collect tiles from all players in game, and filter for unused tiles
+    this.state.players.forEach((_, i) => { allTilesInGame.push(...this.state.players[i].tiles); });
+    let unusedPlayersTiles = allTilesInGame.filter((tile)=>{return !tile.used});
+
+    // No tiles left in bank and all players used their tiles
+    if (this.state.bankTiles.length === 0 && unusedPlayersTiles.length === 0) {
+      // Game ended, save current state and update flag
+      this.updateHistory(); // last move in the game must be kept
+      isGameEnded = true;
+      alert('Game is over !');
+    }
+
+    this.setState({isGameEnded:isGameEnded});
+  }
+
   onTileDropped (droppedCellIndex) {
     // Save current state, before any modifications
     this.updateHistory();
@@ -79,6 +99,9 @@ class Game extends Component {
     };
     tiles[index].used = true;
     this.setState((prevState) => ({cells, players}));
+
+    // Check if game is over
+    this.checkGameEnded();
   }
 
   getCurrentPlayerIndex () {
@@ -115,8 +138,12 @@ class Game extends Component {
     const {tiles} = players[indexCurrentPlayer];
   
     // Push tile from bank to player's hand
-    tiles.push(this.popRandomTile(bankTiles));
-    this.setState((prevState) => ({bankTiles, players}));
+    let newTile = this.popRandomTile(bankTiles);
+    // Check first that we have a new tile
+    if (newTile) {
+      tiles.push(newTile);
+      this.setState((prevState) => ({bankTiles, players}));
+  }
   }
 
   setPlayerInitTiles (players, bankTiles) {
