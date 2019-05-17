@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Board from '../board/board.jsx';
 import Player from '../player/player.jsx';
-import { DIRECTIONS, MAX_TILE_DOT_NUMBER, INIT_PLAYER_TILES } from '../consts.js';
+import { DIRECTIONS, MAX_TILE_DOT_NUMBER, INIT_PLAYER_TILES, BOARD_COLUMN_SIZE } from '../consts.js';
 import './game.css';
 
 class Game extends Component {
@@ -24,21 +24,21 @@ class Game extends Component {
       isGameEnded: false
     };
 
-    this.getTileFromBank = this.getTileFromBank.bind(this)
+    this.getTileFromBank = this.getTileFromBank.bind(this);
     this.onTileStartDragging = this.onTileStartDragging.bind(this);
     this.onTileDropped = this.onTileDropped.bind(this);
     this.handleKeyDown = this.handleKeyDown.bind(this);
   }
 
-  handleKeyDown(event) {
+  handleKeyDown (event) {
     let charCode = String.fromCharCode(event.which).toLowerCase();
-    if((event.ctrlKey || event.metaKey) && charCode === 'z') {
+    if ((event.ctrlKey || event.metaKey) && charCode === 'z') {
       this.goBackHistory();
     }
   }
 
-  goBackHistory() {
-    if (this.state.stateHistory.length === 0){
+  goBackHistory () {
+    if (this.state.stateHistory.length === 0) {
       return;
     }
     // Get previous saved state
@@ -47,11 +47,11 @@ class Game extends Component {
   }
 
   // Will update history with current state
-  updateHistory() {
+  updateHistory () {
     let newState = JSON.parse(JSON.stringify(this.state)); // TODO: find a better way to deepcopy
     let clonedHistory = this.state.stateHistory.splice();
     clonedHistory.push(newState);
-    this.setState({stateHistory : clonedHistory})
+    this.setState({stateHistory: clonedHistory});
   }
 
   onTileStartDragging (draggedTile) {
@@ -60,13 +60,13 @@ class Game extends Component {
     });
   }
 
-  checkGameEnded() {
+  checkGameEnded () {
     let allTilesInGame = [];
     let isGameEnded = false;
 
     // Collect tiles from all players in game, and filter for unused tiles
     this.state.players.forEach((_, i) => { allTilesInGame.push(...this.state.players[i].tiles); });
-    let unusedPlayersTiles = allTilesInGame.filter((tile)=>{return !tile.used});
+    let unusedPlayersTiles = allTilesInGame.filter((tile) => {return !tile.used;});
 
     // No tiles left in bank and all players used their tiles
     if (this.state.bankTiles.length === 0 && unusedPlayersTiles.length === 0) {
@@ -76,7 +76,7 @@ class Game extends Component {
       alert('Game is over !');
     }
 
-    this.setState({isGameEnded:isGameEnded});
+    this.setState({isGameEnded: isGameEnded});
   }
 
   onTileDropped (droppedCellIndex) {
@@ -84,6 +84,7 @@ class Game extends Component {
     this.updateHistory();
 
     const indexCurrentPlayer = this.getCurrentPlayerIndex();
+
     const {cells, players} = this.state;
     const {tiles} = players[indexCurrentPlayer];
     const {rightSideNum, leftSideNum, index} = this.state.draggedTile;
@@ -97,7 +98,12 @@ class Game extends Component {
       direction: DIRECTIONS.vertical,
       draggable: false
     };
+    cells[droppedCellIndex].used = true;
     tiles[index].used = true;
+
+    if (cells[droppedCellIndex + BOARD_COLUMN_SIZE])
+      cells[droppedCellIndex + BOARD_COLUMN_SIZE].used = true;
+
     this.setState((prevState) => ({cells, players}));
 
     // Check if game is over
@@ -108,7 +114,7 @@ class Game extends Component {
     return this.state.turnCount % 1;
   }
 
-  popRandomTile(tilesArr) {
+  popRandomTile (tilesArr) {
     if (tilesArr.length > 0) {
       const randomIndex = Math.floor(Math.random() * tilesArr.length);
       let tile = tilesArr.splice(randomIndex, 1)[0];
@@ -136,14 +142,14 @@ class Game extends Component {
     const indexCurrentPlayer = this.getCurrentPlayerIndex();
     const {bankTiles, players} = this.state;
     const {tiles} = players[indexCurrentPlayer];
-  
+
     // Push tile from bank to player's hand
     let newTile = this.popRandomTile(bankTiles);
     // Check first that we have a new tile
     if (newTile) {
       tiles.push(newTile);
       this.setState((prevState) => ({bankTiles, players}));
-  }
+    }
   }
 
   setPlayerInitTiles (players, bankTiles) {
@@ -173,7 +179,8 @@ class Game extends Component {
                            getTileFromBank={this.getTileFromBank}/>;
           })
         }
-        <button className='history-back' onClick={() => this.goBackHistory()} disabled={this.state.stateHistory.length===0}>
+        <button className='history-back' onClick={() => this.goBackHistory()}
+                disabled={this.state.stateHistory.length === 0}>
           {`Undo`}
         </button>
       </div>
