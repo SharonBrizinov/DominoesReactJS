@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import './board.css';
 import Tile from '../tile/tile.jsx';
 import EmptyCell from '../emptyCell/emptyCell.jsx';
-import UsedCell from '../usedCell/usedCell.jsx';
+import LegalCell from '../legalCell/legalCell.jsx';
 
 class Board extends Component {
   constructor (props) {
@@ -32,7 +32,7 @@ class Board extends Component {
           this.props.cells.map((cell) => {
             return cell.tile ?
               <Tile key={`tile-${cell.index}`} {...cell.tile}/> :
-              <EmptyCell key={`cell-${cell.index}`} index={cell.index}/>;
+              this.getEmptyCell(cell);
           })
         }
       </div>
@@ -41,7 +41,7 @@ class Board extends Component {
 
   getEmptyCell (cell) {
     const cellKey = `cell-${cell.index}`;
-    return cell.used ? <UsedCell key={cellKey} /> : <EmptyCell key={cellKey} index={cell.index}/>;
+    return cell.legal ? <EmptyCell key={cellKey} index={cell.index}/> : <LegalCell key={cellKey} />;
   }
 }
 

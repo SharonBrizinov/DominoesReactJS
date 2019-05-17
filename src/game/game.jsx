@@ -15,9 +15,10 @@ class Game extends Component {
       turnCount: 0,
       currentPlayer: null,
       cells: Array.from(Array(20 * 10).keys()).map((index) => {
-        return {index, tile: null};
+        return {index, tile: null, legal: true};
       }),
       draggedTile: null,
+      tilesOnBoard: [],
       bankTiles: bankTiles,
       players: players,
       stateHistory: [],
@@ -138,28 +139,55 @@ class Game extends Component {
 
     const indexCurrentPlayer = this.getCurrentPlayerIndex();
 
-    const {cells, players} = this.state;
+    const {cells, players, tilesOnBoard} = this.state;
     const {tiles} = players[indexCurrentPlayer];
     const {rightSideNum, leftSideNum, index} = this.state.draggedTile;
 
     // Update score
     players[indexCurrentPlayer].score += 1;
-
-    cells[droppedCellIndex].tile = {
+    const newTile = {
       rightSideNum,
       leftSideNum,
       direction: DIRECTIONS.vertical,
-      draggable: false
+      draggable: false,
+      cellIndex: droppedCellIndex
     };
-    cells[droppedCellIndex].used = true;
+
+    tilesOnBoard.push(newTile);
+    cells[droppedCellIndex].tile = newTile;
     tiles[index].used = true;
 
-    if (cells[droppedCellIndex + BOARD_COLUMN_SIZE])
-      cells[droppedCellIndex + BOARD_COLUMN_SIZE].used = true;
+    if (tilesOnBoard.length === 1) // all places are illegal
+      this.initIllegalCells(cells);
 
-    this.setState((prevState) => ({cells, players}), () => {
+    this.setLegalCells(cells, tilesOnBoard);
+
+    this.setState((prevState) => ({cells, players, tilesOnBoard}), () => {
       // End turn
       this.turnEnded();
+    });
+  }
+
+  initIllegalCells (cells) {
+    cells.forEach((cell) => {
+      cell.legal = false;
+    });
+  }
+
+  setLegalCells (cells, tilesOnBoard) {
+    tilesOnBoard.forEach((tile) => {
+      const {rightSideNum, leftSideNum, cellIndex} = tile;
+      const upCellIndex = cellIndex - BOARD_COLUMN_SIZE;
+      const downCellIndex = cellIndex + BOARD_COLUMN_SIZE;
+      const leftCellIndex = cellIndex - 1;
+      const rightCellIndex = cellIndex + 1;
+      let legalIndices = [upCellIndex, downCellIndex];
+
+      legalIndices = [...(rightSideNum === leftSideNum ? [leftCellIndex, rightCellIndex] : []), ...legalIndices];
+
+      legalIndices.forEach((legalIndex) => {
+        cells[legalIndex].legal = true;
+      })
     });
   }
 
