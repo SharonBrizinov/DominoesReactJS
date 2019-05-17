@@ -95,13 +95,14 @@ class Game extends Component {
     this.setState({stateHistory: clonedHistory, stateHistoryIndex: newStateHistoryIndex});
   }
 
-  turnEnded() {
+  turnEnded () {
     // Update turn count 
     let currentTrunCount = this.state.turnCount + 1;
-    this.setState({turnCount:currentTrunCount}, () => {
+    this.setState({turnCount: currentTrunCount}, () => {
       // Then check if game has ended
       this.checkGameEnded();
     })
+
   }
 
   onTileStartDragging (draggedTile) {
@@ -148,7 +149,7 @@ class Game extends Component {
     const newTile = {
       rightSideNum,
       leftSideNum,
-      direction: DIRECTIONS.vertical,
+      direction: cells[droppedCellIndex].direction || DIRECTIONS.vertical,
       draggable: false,
       cellIndex: droppedCellIndex
     };
@@ -177,17 +178,40 @@ class Game extends Component {
   setLegalCells (cells, tilesOnBoard) {
     tilesOnBoard.forEach((tile) => {
       const {rightSideNum, leftSideNum, cellIndex} = tile;
-      const upCellIndex = cellIndex - BOARD_COLUMN_SIZE;
-      const downCellIndex = cellIndex + BOARD_COLUMN_SIZE;
-      const leftCellIndex = cellIndex - 1;
-      const rightCellIndex = cellIndex + 1;
-      let legalIndices = [upCellIndex, downCellIndex];
+      const verticalCellJump = tile.direction === DIRECTIONS.vertical ? BOARD_COLUMN_SIZE : 1;
+      const horizontalCellJump = tile.direction === DIRECTIONS.vertical ? 1 : BOARD_COLUMN_SIZE;
+      const upCellIndex = cellIndex - verticalCellJump;
+      const downCellIndex = cellIndex + verticalCellJump;
+      const leftCellIndex = cellIndex - horizontalCellJump;
+      const rightCellIndex = cellIndex + horizontalCellJump;
+      const horizontalIndices = [
+        {
+          index: leftCellIndex,
+          direction: DIRECTIONS.horizontal
+        }, {
+          index: rightCellIndex,
+          direction: DIRECTIONS.horizontal
+        }
+      ];
 
-      legalIndices = [...(rightSideNum === leftSideNum ? [leftCellIndex, rightCellIndex] : []), ...legalIndices];
+      let legalIndices = [
+        {
+          index: upCellIndex,
+          direction: DIRECTIONS.vertical
+        }, {
+          index: downCellIndex,
+          direction: DIRECTIONS.vertical
+        }
+      ];
 
-      legalIndices.forEach((legalIndex) => {
-        cells[legalIndex].legal = true;
-      })
+      legalIndices = [...(rightSideNum === leftSideNum ? horizontalIndices : []), ...legalIndices];
+
+      legalIndices.forEach((legal) => {
+        if (!cells[legal.index].tile) {
+          cells[legal.index].legal = true;
+          cells[legal.index].direction = legal.direction;
+        }
+      });
     });
   }
 
