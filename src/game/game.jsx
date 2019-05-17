@@ -21,7 +21,10 @@ class Game extends Component {
       bankTiles: bankTiles,
       players: players,
       stateHistory: [],
-      isGameEnded: false
+      stateHistoryIndex: -1,
+      isGameEnded: false,
+      isViewMode: false,
+      isGameMode: true,
     };
 
     this.getTileFromBank = this.getTileFromBank.bind(this);
@@ -37,30 +40,67 @@ class Game extends Component {
     }
   }
 
-  goForwardkHistory () {
+  isHistoryEmtpy () {
+    return this.state.stateHistory.length === 0;
+  }
+  goForwardHistory () {
+    // We must be in View mode to go forward in history
+    if (this.state.isViewMode) {
+      // Make sure we have future history
+      if (this.state.stateHistoryIndex < this.state.stateHistory.length-1) {
+        let newStateHistoryIndex = this.state.stateHistoryIndex + 1;
+        this.setState({stateHistoryIndex: newStateHistoryIndex});
+      }
+    }
   }
 
   goBackHistory () {
-    if (this.state.stateHistory.length === 0) {
+    // Make sure we have some history to work with
+    if (this.isHistoryEmtpy()) {
       return;
     }
-    // Get previous saved state
-    let lastState = this.state.stateHistory.pop();
-    this.setState({...lastState});
+    // If we are in game mode, go back means Undo
+    if (this.state.isGameMode) {
+      // Get previous saved state
+      let lastState = this.state.stateHistory.pop();
+      // removing history from new state
+      delete lastState.stateHistory;
+      // Set as new state (while keeping our history safe)
+      this.setState({...lastState});
+    } else if (this.state.isViewMode){
+      // Otherwise, we are in View mode
+      if (this.state.stateHistoryIndex > 0) {
+        let newStateHistoryIndex = this.state.stateHistoryIndex - 1;
+        this.setState({stateHistoryIndex: newStateHistoryIndex});
+      } else {
+        console.log(`Error: Ambigious mode! Check game state: ${this.state}`);
+      }
+    }
   }
 
   // Will update history with current state
   updateHistory () {
-    let newState = JSON.parse(JSON.stringify(this.state)); // TODO: find a better way to deepcopy
-    let clonedHistory = this.state.stateHistory.splice();
+    // Create deepcopy of current state (TODO: find a better way to deepcopy)
+    let newState = JSON.parse(JSON.stringify(this.state));
+    // Get a copy of state history
+    let clonedHistory = this.state.stateHistory.slice();
+    // removing history from new state and add new state to history
+    delete newState.stateHistory;
     clonedHistory.push(newState);
-    this.setState({stateHistory: clonedHistory});
+    // Update index to last state
+    let newStateHistoryIndex = this.state.stateHistoryIndex + 1;
+
+    // Update the new state history array
+    this.setState({stateHistory: clonedHistory, stateHistoryIndex: newStateHistoryIndex});
   }
 
   turnEnded() {
     // Update turn count 
     let currentTrunCount = this.state.turnCount + 1;
-    this.setState({turnCount:currentTrunCount})
+    this.setState({turnCount:currentTrunCount}, () => {
+      // Then check if game has ended
+      this.checkGameEnded();
+    })
   }
 
   onTileStartDragging (draggedTile) {
@@ -71,7 +111,6 @@ class Game extends Component {
 
   checkGameEnded () {
     let allTilesInGame = [];
-    let isGameEnded = false;
 
     // Collect tiles from all players in game, and filter for unused tiles
     this.state.players.forEach((_, i) => { allTilesInGame.push(...this.state.players[i].tiles); });
@@ -80,12 +119,17 @@ class Game extends Component {
     // No tiles left in bank and all players used their tiles
     if (this.state.bankTiles.length === 0 && unusedPlayersTiles.length === 0) {
       // Game ended, save current state and update flag
-      this.updateHistory(); // last move in the game must be kept
-      isGameEnded = true;
+      let isGameEnded = true;
+      let isViewMode = true;
+      let isGameMode = false;
+      this.setState({isGameEnded: isGameEnded, isViewMode: isViewMode, isGameMode: isGameMode}, () => {
+        // last move in the game must be kept
+        this.updateHistory();
+      });
       alert('Game is over !');
+      return true;
     }
-
-    this.setState({isGameEnded: isGameEnded});
+    return false;
   }
 
   onTileDropped (droppedCellIndex) {
@@ -113,11 +157,10 @@ class Game extends Component {
     if (cells[droppedCellIndex + BOARD_COLUMN_SIZE])
       cells[droppedCellIndex + BOARD_COLUMN_SIZE].used = true;
 
-    this.setState((prevState) => ({cells, players}));
-
-    // Check if game is over
-    this.checkGameEnded();
-    this.turnEnded();
+    this.setState((prevState) => ({cells, players}), () => {
+      // End turn
+      this.turnEnded();
+    });
   }
 
   getCurrentPlayerIndex () {
@@ -146,6 +189,11 @@ class Game extends Component {
   }
 
   getTileFromBank () {
+    if(this.state.isGameEnded) {
+      alert('Game has ended, you can\'t request more tiles!');
+      return;
+    }
+
     // Save current state, before any modifications
     this.updateHistory();
 
@@ -158,7 +206,10 @@ class Game extends Component {
     // Check first that we have a new tile
     if (newTile) {
       tiles.push(newTile);
-      this.setState((prevState) => ({bankTiles, players}));
+      this.setState((prevState) => ({bankTiles, players}), () => {
+        // End turn
+        this.turnEnded();
+      });
     }
   }
 
@@ -176,26 +227,35 @@ class Game extends Component {
   }
 
   render () {
+    // Actual game state
+    let isActualViewMode = this.state.isViewMode;
+    let actualTurnCount = this.state.turnCount;
+    let isHistoryEmtpy = this.isHistoryEmtpy();
+    let shouldDisableBackward = isHistoryEmtpy || (isActualViewMode && this.state.stateHistoryIndex == 0);
+    let shouldDisableForward = !isActualViewMode || (isActualViewMode && this.state.stateHistoryIndex === this.state.stateHistory.length-1);
+
+    // Current state that we want to present to the user (to support the View Mode feature)
+    let currentStateToShow = isActualViewMode ? this.state.stateHistory[this.state.stateHistoryIndex] : this.state;
+
     return (
       <div className='game' onKeyDown={this.handleKeyDown}>
         <div className='game-details'>
           <div className='mode-status'>
-            {this.state.isGameEnded ? `View Mode` : `Game Mode`}
-            {` (${this.state.turnCount}/${this.state.turnCount})`}
+            {isActualViewMode ? `View Mode` : `Game Mode`}
+            {` (${currentStateToShow.turnCount}/${actualTurnCount})`}
           </div>
           <button className='history-back' onClick={() => this.goBackHistory()}
-                disabled={this.state.stateHistory.length === 0}>
-            {this.state.isGameEnded ? `Previous` : `Undo`}
+                disabled={shouldDisableBackward}>
+            {isActualViewMode ? `Previous` : `Undo`}
           </button>
-          <button className='history-forward' onClick={() => this.goForwardkHistory()}
-                disabled={!this.state.isGameEnded}
-                hidden={!this.state.isGameEnded}>
+          <button className='history-forward' onClick={() => this.goForwardHistory()}
+                disabled={shouldDisableForward} hidden={!isActualViewMode}>
             {`Next`}
           </button>
         </div>
-        <Board cells={this.state.cells} onTileDropped={this.onTileDropped}/>
+        <Board cells={currentStateToShow.cells} onTileDropped={this.onTileDropped}/>
         {
-          this.state.players.map((player, i) => {
+          currentStateToShow.players.map((player, i) => {
             return <Player key={`player-${i}`}
                            name={player.name} id={i}
                            tiles={player.tiles}
