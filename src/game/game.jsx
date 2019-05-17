@@ -44,11 +44,12 @@ class Game extends Component {
   isHistoryEmtpy () {
     return this.state.stateHistory.length === 0;
   }
+
   goForwardHistory () {
     // We must be in View mode to go forward in history
     if (this.state.isViewMode) {
       // Make sure we have future history
-      if (this.state.stateHistoryIndex < this.state.stateHistory.length-1) {
+      if (this.state.stateHistoryIndex < this.state.stateHistory.length - 1) {
         let newStateHistoryIndex = this.state.stateHistoryIndex + 1;
         this.setState({stateHistoryIndex: newStateHistoryIndex});
       }
@@ -68,7 +69,7 @@ class Game extends Component {
       delete lastState.stateHistory;
       // Set as new state (while keeping our history safe)
       this.setState({...lastState});
-    } else if (this.state.isViewMode){
+    } else if (this.state.isViewMode) {
       // Otherwise, we are in View mode
       if (this.state.stateHistoryIndex > 0) {
         let newStateHistoryIndex = this.state.stateHistoryIndex - 1;
@@ -96,12 +97,12 @@ class Game extends Component {
   }
 
   turnEnded () {
-    // Update turn count 
+    // Update turn count
     let currentTrunCount = this.state.turnCount + 1;
     this.setState({turnCount: currentTrunCount}, () => {
       // Then check if game has ended
       this.checkGameEnded();
-    })
+    });
 
   }
 
@@ -143,7 +144,9 @@ class Game extends Component {
     const {cells, players, tilesOnBoard} = this.state;
     const {tiles} = players[indexCurrentPlayer];
     const {rightSideNum, leftSideNum, index} = this.state.draggedTile;
+    const isFirstDropped = tilesOnBoard.length === 0;
 
+    // if (isFirstDropped || this.isLegalDrop(cells, droppedCellIndex)) {
     // Update score
     players[indexCurrentPlayer].score += 1;
     const newTile = {
@@ -158,7 +161,7 @@ class Game extends Component {
     cells[droppedCellIndex].tile = newTile;
     tiles[index].used = true;
 
-    if (tilesOnBoard.length === 1) // all places are illegal
+    if (isFirstDropped) // all places are illegal
       this.initIllegalCells(cells);
 
     this.setLegalCells(cells, tilesOnBoard);
@@ -167,6 +170,22 @@ class Game extends Component {
       // End turn
       this.turnEnded();
     });
+    // }
+  }
+
+  isLegalDrop (cells, droppedCellIndex) {
+    const {rightSideNum, leftSideNum} = this.state.draggedTile;
+    const upCell = cells[droppedCellIndex - BOARD_COLUMN_SIZE];
+    const downCell = cells[droppedCellIndex + BOARD_COLUMN_SIZE];
+    const leftCell = cells[droppedCellIndex - 1];
+    const rightCell = cells[droppedCellIndex + 1];
+    const upLegalDrop = upCell.tile && leftSideNum === upCell.tile.rightSideNum;
+    const downLegalDrop = downCell.tile && rightSideNum === downCell.tile.leftSideNum;
+    const leftLegalDrop = leftCell.tile && leftSideNum === leftCell.tile.rightSideNum;
+    const rightLegalDrop = rightCell.tile && rightSideNum === rightCell.tile.leftSideNum;
+
+    return upLegalDrop && downLegalDrop && leftLegalDrop && rightLegalDrop;
+
   }
 
   initIllegalCells (cells) {
@@ -241,7 +260,7 @@ class Game extends Component {
   }
 
   getTileFromBank () {
-    if(this.state.isGameEnded) {
+    if (this.state.isGameEnded) {
       alert('Game has ended, you can\'t request more tiles!');
       return;
     }
@@ -284,7 +303,7 @@ class Game extends Component {
     let actualTurnCount = this.state.turnCount;
     let isHistoryEmtpy = this.isHistoryEmtpy();
     let shouldDisableBackward = isHistoryEmtpy || (isActualViewMode && this.state.stateHistoryIndex == 0);
-    let shouldDisableForward = !isActualViewMode || (isActualViewMode && this.state.stateHistoryIndex === this.state.stateHistory.length-1);
+    let shouldDisableForward = !isActualViewMode || (isActualViewMode && this.state.stateHistoryIndex === this.state.stateHistory.length - 1);
 
     // Current state that we want to present to the user (to support the View Mode feature)
     let currentStateToShow = isActualViewMode ? this.state.stateHistory[this.state.stateHistoryIndex] : this.state;
@@ -297,11 +316,11 @@ class Game extends Component {
             {` (${currentStateToShow.turnCount}/${actualTurnCount})`}
           </div>
           <button className='history-back' onClick={() => this.goBackHistory()}
-                disabled={shouldDisableBackward}>
+                  disabled={shouldDisableBackward}>
             {isActualViewMode ? `Previous` : `Undo`}
           </button>
           <button className='history-forward' onClick={() => this.goForwardHistory()}
-                disabled={shouldDisableForward} hidden={!isActualViewMode}>
+                  disabled={shouldDisableForward} hidden={!isActualViewMode}>
             {`Next`}
           </button>
         </div>
