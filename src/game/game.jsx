@@ -149,24 +149,16 @@ class Game extends Component {
   }
 
   onTileDropped (droppedCellIndex) {
-    if(this.state.isGameEnded) {
+    if (this.state.isGameEnded) {
       alert('Game has ended, you can\'t play!');
       return;
     }
 
-    // Save current state, before any modifications
-    this.updateHistory();
-
     const indexCurrentPlayer = this.getCurrentPlayerIndex();
-
     const {cells, players, tilesOnBoard} = this.state;
     const {tiles} = players[indexCurrentPlayer];
     const {rightSideNum, leftSideNum, index} = this.state.draggedTile;
     const isFirstDropped = tilesOnBoard.length === 0;
-
-    // if (isFirstDropped || this.isLegalDrop(cells, droppedCellIndex)) {
-    // Update score
-    players[indexCurrentPlayer].score += (rightSideNum + leftSideNum);
     const newTile = {
       rightSideNum,
       leftSideNum,
@@ -175,34 +167,57 @@ class Game extends Component {
       cellIndex: droppedCellIndex
     };
 
-    tilesOnBoard.push(newTile);
-    cells[droppedCellIndex].tile = newTile;
-    tiles[index].used = true;
+    if (isFirstDropped || this.isLegalDrop(cells, droppedCellIndex, newTile)) {
+      // Save current state, before any modifications
+      this.updateHistory();
 
-    if (isFirstDropped) // all places are illegal
-      this.initIllegalCells(cells);
+      // Update score
+      players[indexCurrentPlayer].score += (rightSideNum + leftSideNum);
 
-    this.setLegalCells(cells, tilesOnBoard);
+      tilesOnBoard.push(newTile);
+      cells[droppedCellIndex].tile = newTile;
+      tiles[index].used = true;
 
-    this.setState((prevState) => ({cells, players, tilesOnBoard}), () => {
-      // End turn
-      this.turnEnded();
-    });
+      if (isFirstDropped) // all places are illegal
+        this.initIllegalCells(cells);
+
+      this.setLegalCells(cells, tilesOnBoard);
+
+      this.setState((prevState) => ({cells, players, tilesOnBoard}), () => {
+        // End turn
+        this.turnEnded();
+      });
+    }
   }
 
-  isLegalDrop (cells, droppedCellIndex) {
+  isLegalDrop (cells, droppedCellIndex, newTile) {
     const {rightSideNum, leftSideNum} = this.state.draggedTile;
+
+    let legal = this.checkAlDroppedSides(cells, droppedCellIndex, rightSideNum, leftSideNum);
+    if (legal)
+      return legal;
+    legal = this.checkAlDroppedSides(cells, droppedCellIndex, leftSideNum, rightSideNum);
+
+    if (legal) { // rotate tile
+      newTile.rightSideNum = leftSideNum;
+      newTile.leftSideNum = rightSideNum;
+      return legal;
+    }
+    
+    return false;
+  }
+
+  checkAlDroppedSides (cells, droppedCellIndex, rightSideNum, leftSideNum) {
     const upCell = cells[droppedCellIndex - BOARD_COLUMN_SIZE];
     const downCell = cells[droppedCellIndex + BOARD_COLUMN_SIZE];
     const leftCell = cells[droppedCellIndex - 1];
     const rightCell = cells[droppedCellIndex + 1];
-    const upLegalDrop = upCell.tile && leftSideNum === upCell.tile.rightSideNum;
-    const downLegalDrop = downCell.tile && rightSideNum === downCell.tile.leftSideNum;
-    const leftLegalDrop = leftCell.tile && leftSideNum === leftCell.tile.rightSideNum;
-    const rightLegalDrop = rightCell.tile && rightSideNum === rightCell.tile.leftSideNum;
+    const upLegalDrop = !upCell.tile || upCell.tile && leftSideNum === upCell.tile.rightSideNum;
+    const downLegalDrop = !downCell.tile || downCell.tile && rightSideNum === downCell.tile.leftSideNum;
+    const leftLegalDrop = !leftCell.tile || leftCell.tile && leftSideNum === leftCell.tile.rightSideNum;
+    const rightLegalDrop = !rightCell.tile || rightCell.tile && rightSideNum === rightCell.tile.leftSideNum;
 
     return upLegalDrop && downLegalDrop && leftLegalDrop && rightLegalDrop;
-
   }
 
   initIllegalCells (cells) {
