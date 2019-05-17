@@ -32,7 +32,7 @@ class Board extends Component {
           this.props.cells.map((cell) => {
             return cell.tile ?
               <Tile key={`tile-${cell.index}`} {...cell.tile}/> :
-              this.getEmptyCell(cell);
+              <EmptyCell key={`cell-${cell.index}`} index={cell.index}/>;
           })
         }
       </div>

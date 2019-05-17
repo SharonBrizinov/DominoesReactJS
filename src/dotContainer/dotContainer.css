@@ -1,7 +1,7 @@
 .dot-container {
     display: grid;
     grid-template-columns: repeat(3, 10px);
-    grid-column-gap: 10px;
+    grid-column-gap: 6px;
     justify-content: center;
     align-items: center;
 }

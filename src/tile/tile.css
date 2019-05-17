@@ -4,11 +4,13 @@
     padding: 4px;
     background-color: whitesmoke;
     transition: transform .2s;
+    justify-self: center;
+    align-self: center;
 }
 
 .tile hr {
     border: 1px solid black;
-    margin: 0;
+    margin: 1px;
     padding: 0;
     border-radius: 1px;
 }
@@ -17,13 +19,13 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
-    width: 60px;
-    height: 120px;
+    width: 50px;
+    height: 100px;
 }
 
 .tile[direction="horizontal"]{
     display: flex;
     justify-content: center;
-    width: 120px;
-    height: 60px;
+    width: 100px;
+    height: 50px;
 }

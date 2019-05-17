@@ -1,4 +1,5 @@
 body {
     background-image: url("./images/woord.jpg");
     background-size: cover;
+    overflow: hidden;
 }

@@ -13,7 +13,7 @@
 }
 
 .player .hand-deck {
-    height: 150%;
+    height: 110%;
     min-width: 450px;
     display: flex;
 }
