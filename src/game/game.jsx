@@ -38,6 +38,9 @@ class Game extends Component {
     }
   }
 
+  goForwardkHistory () {
+  }
+
   goBackHistory () {
     if (this.state.stateHistory.length === 0) {
       return;
@@ -53,6 +56,12 @@ class Game extends Component {
     let clonedHistory = this.state.stateHistory.splice();
     clonedHistory.push(newState);
     this.setState({stateHistory: clonedHistory});
+  }
+
+  turnEnded() {
+    // Update turn count 
+    let currentTrunCount = this.state.turnCount + 1;
+    this.setState({turnCount:currentTrunCount})
   }
 
   onTileStartDragging (draggedTile) {
@@ -113,6 +122,7 @@ class Game extends Component {
 
     // Check if game is over
     this.checkGameEnded();
+    this.turnEnded();
   }
 
   initIllegalCells (cells) {
@@ -139,7 +149,7 @@ class Game extends Component {
   }
 
   getCurrentPlayerIndex () {
-    return this.state.turnCount % 1;
+    return this.state.turnCount % this.state.players.length;
   }
 
   popRandomTile (tilesArr) {
@@ -148,7 +158,7 @@ class Game extends Component {
       let tile = tilesArr.splice(randomIndex, 1)[0];
       return tile;
     } else {
-      alert('No more tiles !');
+      alert('No more tiles in bank!');
       return null;
     }
   }
@@ -196,6 +206,21 @@ class Game extends Component {
   render () {
     return (
       <div className='game' onKeyDown={this.handleKeyDown}>
+        <div className='game-details'>
+          <div className='mode-status'>
+            {this.state.isGameEnded ? `View Mode` : `Game Mode`}
+            {` (${this.state.turnCount}/${this.state.turnCount})`}
+          </div>
+          <button className='history-back' onClick={() => this.goBackHistory()}
+                disabled={this.state.stateHistory.length === 0}>
+            {this.state.isGameEnded ? `Previous` : `Undo`}
+          </button>
+          <button className='history-forward' onClick={() => this.goForwardkHistory()}
+                disabled={!this.state.isGameEnded}
+                hidden={!this.state.isGameEnded}>
+            {`Next`}
+          </button>
+        </div>
         <Board cells={this.state.cells} onTileDropped={this.onTileDropped}/>
         {
           this.state.players.map((player, i) => {
@@ -207,10 +232,6 @@ class Game extends Component {
                            getTileFromBank={this.getTileFromBank}/>;
           })
         }
-        <button className='history-back' onClick={() => this.goBackHistory()}
-                disabled={this.state.stateHistory.length === 0}>
-          {`Undo`}
-        </button>
       </div>
     );
   }
