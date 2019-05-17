@@ -101,7 +101,6 @@ class Game extends Component {
 
     // Update score
     players[indexCurrentPlayer].score += 1;
-    console.log(cells[droppedCellIndex].direction);
     const newTile = {
       rightSideNum,
       leftSideNum,
