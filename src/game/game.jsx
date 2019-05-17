@@ -41,7 +41,7 @@ class Game extends Component {
     }
   }
 
-  isHistoryEmtpy () {
+  isHistoryEmpty () {
     return this.state.stateHistory.length === 0;
   }
 
@@ -58,7 +58,7 @@ class Game extends Component {
 
   goBackHistory () {
     // Make sure we have some history to work with
-    if (this.isHistoryEmtpy()) {
+    if (this.isHistoryEmpty()) {
       return;
     }
     // If we are in game mode, go back means Undo
@@ -136,6 +136,11 @@ class Game extends Component {
   }
 
   onTileDropped (droppedCellIndex) {
+    if(this.state.isGameEnded) {
+      alert('Game has ended, you can\'t play!');
+      return;
+    }
+
     // Save current state, before any modifications
     this.updateHistory();
 
@@ -301,8 +306,8 @@ class Game extends Component {
     // Actual game state
     let isActualViewMode = this.state.isViewMode;
     let actualTurnCount = this.state.turnCount;
-    let isHistoryEmtpy = this.isHistoryEmtpy();
-    let shouldDisableBackward = isHistoryEmtpy || (isActualViewMode && this.state.stateHistoryIndex == 0);
+    let isHistoryEmpty = this.isHistoryEmpty();
+    let shouldDisableBackward = isHistoryEmpty || (isActualViewMode && this.state.stateHistoryIndex == 0);
     let shouldDisableForward = !isActualViewMode || (isActualViewMode && this.state.stateHistoryIndex === this.state.stateHistory.length - 1);
 
     // Current state that we want to present to the user (to support the View Mode feature)
