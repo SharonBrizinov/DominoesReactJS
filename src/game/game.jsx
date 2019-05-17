@@ -34,6 +34,19 @@ class Game extends Component {
     this.handleKeyDown = this.handleKeyDown.bind(this);
   }
 
+  calculcatePlayerScore(indexPlayer) {
+      const currentPlayer = this.state.players[indexPlayer];
+      const currentPlayerTiles = currentPlayer.tiles
+      let playerSumPoints = 0;
+
+      currentPlayerTiles.forEach((tile) => {
+        if (tile.used)
+          playerSumPoints += (tile.leftSideNum + this.rightSideNum);
+      });
+
+      return playerSumPoints;
+  }
+
   handleKeyDown (event) {
     let charCode = String.fromCharCode(event.which).toLowerCase();
     if ((event.ctrlKey || event.metaKey) && charCode === 'z') {
@@ -153,7 +166,7 @@ class Game extends Component {
 
     // if (isFirstDropped || this.isLegalDrop(cells, droppedCellIndex)) {
     // Update score
-    players[indexCurrentPlayer].score += 1;
+    players[indexCurrentPlayer].score += (rightSideNum + leftSideNum);
     const newTile = {
       rightSideNum,
       leftSideNum,
@@ -175,7 +188,6 @@ class Game extends Component {
       // End turn
       this.turnEnded();
     });
-    // }
   }
 
   isLegalDrop (cells, droppedCellIndex) {
