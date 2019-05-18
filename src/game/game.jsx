@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Board from '../board/board.jsx';
 import Player from '../player/player.jsx';
-import Timer from '../timer/timer.jsx';
+import GameDetails from '../gameDetails/gameDetails.jsx';
 import {
   DIRECTIONS, MAX_TILE_DOT_NUMBER, INIT_PLAYER_TILES,
   BOARD_COLUMN_SIZE, BOARD_ROWS_SIZE, EMPTY_TILE, EMPTY_LEGAL_TILE
@@ -36,6 +36,8 @@ class Game extends Component {
     this.onTileStartDragging = this.onTileStartDragging.bind(this);
     this.onTileDropped = this.onTileDropped.bind(this);
     this.handleKeyDown = this.handleKeyDown.bind(this);
+    this.goBackHistory = this.goBackHistory.bind(this);
+    this.goForwardHistory = this.goForwardHistory.bind(this);
   }
 
   calculcatePlayerScore(indexPlayer) {
@@ -368,21 +370,15 @@ class Game extends Component {
 
     return (
       <div className='game' onKeyDown={this.handleKeyDown}>
-        <div className='game-details'>
-          <div className='mode-status'>
-            {isActualViewMode ? `View Mode` : `Game Mode`}
-            {` (${currentStateToShow.turnCount}/${actualTurnCount})`}
-          </div>
-          <button className='history-back' onClick={() => this.goBackHistory()}
-                  disabled={shouldDisableBackward}>
-            {isActualViewMode ? `Previous` : `Undo`}
-          </button>
-          <button className='history-forward' onClick={() => this.goForwardHistory()}
-                  disabled={shouldDisableForward} hidden={!isActualViewMode}>
-            {`Next`}
-          </button>
-          <Timer/>
-        </div>
+
+        <GameDetails isViewMode={isActualViewMode}
+                     gameState={currentStateToShow}
+                     totalTurnCount={actualTurnCount}
+                     shouldDisableBackward={shouldDisableBackward}
+                     shouldDisableForward={shouldDisableForward}
+                     goBackHistory={this.goBackHistory}
+                     goForwardHistory={this.goForwardHistory}/>
+
         <Board cells={currentStateToShow.cells} onTileDropped={this.onTileDropped}/>
         {
           currentStateToShow.players.map((player, i) => {
