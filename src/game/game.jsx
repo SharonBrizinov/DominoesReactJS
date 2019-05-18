@@ -1,7 +1,10 @@
 import React, { Component } from 'react';
 import Board from '../board/board.jsx';
 import Player from '../player/player.jsx';
-import { DIRECTIONS, MAX_TILE_DOT_NUMBER, INIT_PLAYER_TILES, BOARD_COLUMN_SIZE } from '../consts.js';
+import {
+  DIRECTIONS, MAX_TILE_DOT_NUMBER, INIT_PLAYER_TILES,
+  BOARD_COLUMN_SIZE, BOARD_ROWS_SIZE, EMPTY_TILE, EMPTY_LEGAL_TILE
+} from '../consts.js';
 import './game.css';
 
 class Game extends Component {
@@ -14,8 +17,8 @@ class Game extends Component {
     this.state = {
       turnCount: 0,
       currentPlayer: null,
-      cells: Array.from(Array(20 * 10).keys()).map((index) => {
-        return {index, tile: null, legal: true};
+      cells: Array.from(Array(BOARD_COLUMN_SIZE * BOARD_ROWS_SIZE).keys()).map((index) => {
+        return {...EMPTY_LEGAL_TILE, index};
       }),
       draggedTile: null,
       tilesOnBoard: [],
@@ -98,8 +101,8 @@ class Game extends Component {
 
   turnEnded () {
     // Update turn count
-    let currentTrunCount = this.state.turnCount + 1;
-    this.setState({turnCount: currentTrunCount}, () => {
+    let currentTurnCount = this.state.turnCount + 1;
+    this.setState({turnCount: currentTurnCount}, () => {
       // Then check if game has ended
       this.checkGameEnded();
     });
@@ -169,6 +172,8 @@ class Game extends Component {
       if (isFirstDropped) // all places are illegal
         this.initIllegalCells(cells);
 
+      // this.moveAllTilesOnBoardRight(droppedCellIndex, cells, tilesOnBoard);
+
       this.setLegalCells(cells, tilesOnBoard);
 
       this.setState((prevState) => ({cells, players, tilesOnBoard}), () => {
@@ -179,7 +184,6 @@ class Game extends Component {
   }
 
   isLegalDrop (cells, droppedCellIndex, newTile) {
-
     const {rightSideNum, leftSideNum} = this.state.draggedTile;
 
     let legal = this.checkAlDroppedSides(cells, droppedCellIndex, rightSideNum, leftSideNum);
@@ -194,7 +198,6 @@ class Game extends Component {
     }
 
     return false;
-
   }
 
   checkAlDroppedSides (cells, droppedCellIndex, rightSideNum, leftSideNum) {
@@ -208,6 +211,24 @@ class Game extends Component {
     const rightLegalDrop = !rightCell.tile || rightCell.tile && rightSideNum === rightCell.tile.leftSideNum;
 
     return upLegalDrop && downLegalDrop && leftLegalDrop && rightLegalDrop;
+  }
+
+  moveAllTilesOnBoardRight (droppedCellIndex, cells, tilesOnBoard) {
+    if (droppedCellIndex % BOARD_COLUMN_SIZE === 0) {
+      tilesOnBoard.forEach((tile) => {
+        cells[tile.cellIndex] = {...EMPTY_TILE, index: tile.cellIndex};
+        cells[tile.cellIndex + 1] = {...EMPTY_TILE, tile};
+        tile.cellIndex = tile.cellIndex + 1;
+      });
+
+      cells.forEach((cell, i) => {
+        cell.index = i;
+      });
+
+      this.initIllegalCells(cells);
+
+      document.body.style['overflow-x'] = 'scroll';
+    }
   }
 
   initIllegalCells (cells) {
@@ -225,23 +246,25 @@ class Game extends Component {
       const downCellIndex = cellIndex + verticalCellJump;
       const leftCellIndex = cellIndex - horizontalCellJump;
       const rightCellIndex = cellIndex + horizontalCellJump;
+      const horizontalIndicesDirection = tile.direction === DIRECTIONS.vertical ? DIRECTIONS.horizontal : DIRECTIONS.vertical;
+      const verticalIndicesDirection = tile.direction === DIRECTIONS.vertical ? DIRECTIONS.vertical : DIRECTIONS.horizontal;
       const horizontalIndices = [
         {
           index: leftCellIndex,
-          direction: DIRECTIONS.horizontal
+          direction: horizontalIndicesDirection
         }, {
           index: rightCellIndex,
-          direction: DIRECTIONS.horizontal
+          direction: horizontalIndicesDirection
         }
       ];
 
       let legalIndices = [
         {
           index: upCellIndex,
-          direction: DIRECTIONS.vertical
+          direction: verticalIndicesDirection
         }, {
           index: downCellIndex,
-          direction: DIRECTIONS.vertical
+          direction: verticalIndicesDirection
         }
       ];
 
