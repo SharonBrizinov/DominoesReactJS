@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import Timer from '../timer/timer.jsx';
+import './gameDetails.css';
 
 class GameDetails extends Component {
     constructor (props) {
@@ -23,7 +24,10 @@ class GameDetails extends Component {
                   disabled={this.props.shouldDisableForward} hidden={!this.props.isViewMode}>
             {`Next`}
           </button>
-          <Timer/>
+          <div className='tiles-on-board'>
+            {`Tiles: ${this.props.usedTiles}`}
+          </div>
+          <Timer secondsElapsed={this.props.secondsElapsed}/>
         </div>
       );
     }

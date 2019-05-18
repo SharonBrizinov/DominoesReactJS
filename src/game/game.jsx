@@ -4,7 +4,7 @@ import Player from '../player/player.jsx';
 import GameDetails from '../gameDetails/gameDetails.jsx';
 import {
   DIRECTIONS, MAX_TILE_DOT_NUMBER, INIT_PLAYER_TILES,
-  BOARD_COLUMN_SIZE, BOARD_ROWS_SIZE, EMPTY_TILE, EMPTY_LEGAL_TILE
+  BOARD_COLUMN_SIZE, BOARD_ROWS_SIZE, EMPTY_TILE, EMPTY_LEGAL_TILE, TICK_TIME_MILISECONDS
 } from '../consts.js';
 import './game.css';
 
@@ -30,6 +30,7 @@ class Game extends Component {
       isGameEnded: false,
       isViewMode: false,
       isGameMode: true,
+      timer: {isRunning: false, secondsElapsed: 0},
     };
 
     this.getTileFromBank = this.getTileFromBank.bind(this);
@@ -38,21 +39,26 @@ class Game extends Component {
     this.handleKeyDown = this.handleKeyDown.bind(this);
     this.goBackHistory = this.goBackHistory.bind(this);
     this.goForwardHistory = this.goForwardHistory.bind(this);
+    this.timerInterval = setInterval(this.timerTick.bind(this), TICK_TIME_MILISECONDS);
   }
 
-  calculcatePlayerScore(indexPlayer) {
-      const currentPlayer = this.state.players[indexPlayer];
-      const currentPlayerTiles = currentPlayer.tiles
-      let playerSumPoints = 0;
-
-      currentPlayerTiles.forEach((tile) => {
-        if (tile.used)
-          playerSumPoints += (tile.leftSideNum + this.rightSideNum);
-      });
-
-      return playerSumPoints;
+  /**** Timer Handling ****/
+  timerTick() {
+    this.setState({timer:{...this.state.timer, secondsElapsed: this.state.timer.secondsElapsed+1}});
   }
 
+  timerReset () {
+    this.setState({timer:{isRunning: true, secondsElapsed: 0}});
+    this.timerInterval = setInterval(this.tick.bind(this), TICK_TIME_MILISECONDS);
+  }
+
+  timerStop () {
+    this.setState({timer:{...this.state.timer, isRunning: false}});
+    clearInterval(this.timerInterval)
+  }
+  /***********************/
+
+  /**** History ****/
   handleKeyDown (event) {
     let charCode = String.fromCharCode(event.which).toLowerCase();
     if ((event.ctrlKey || event.metaKey) && charCode === 'z') {
@@ -114,6 +120,20 @@ class Game extends Component {
     // Update the new state history array
     this.setState({stateHistory: clonedHistory, stateHistoryIndex: newStateHistoryIndex});
   }
+  /***********************/
+
+  calculcatePlayerScore(indexPlayer) {
+    const currentPlayer = this.state.players[indexPlayer];
+    const currentPlayerTiles = currentPlayer.tiles
+    let playerSumPoints = 0;
+
+    currentPlayerTiles.forEach((tile) => {
+      if (tile.used)
+        playerSumPoints += (tile.leftSideNum + this.rightSideNum);
+    });
+
+    return playerSumPoints;
+  }
 
   turnEnded () {
     // Update turn count
@@ -144,6 +164,7 @@ class Game extends Component {
       let isGameEnded = true;
       let isViewMode = true;
       let isGameMode = false;
+      this.timerStop();
       this.setState({isGameEnded: isGameEnded, isViewMode: isViewMode, isGameMode: isGameMode}, () => {
         // last move in the game must be kept
         this.updateHistory();
@@ -377,8 +398,9 @@ class Game extends Component {
                      shouldDisableBackward={shouldDisableBackward}
                      shouldDisableForward={shouldDisableForward}
                      goBackHistory={this.goBackHistory}
-                     goForwardHistory={this.goForwardHistory}/>
-
+                     goForwardHistory={this.goForwardHistory}
+                     secondsElapsed={currentStateToShow.timer.secondsElapsed}
+                     usedTiles={currentStateToShow.tilesOnBoard.length}/>
         <Board cells={currentStateToShow.cells} onTileDropped={this.onTileDropped}/>
         {
           currentStateToShow.players.map((player, i) => {
