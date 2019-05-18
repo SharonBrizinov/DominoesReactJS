@@ -1,5 +1,6 @@
 .mode-status,
-.tiles-on-board{
+.tiles-on-board,
+.game-moves{
     font-weight: normal;
     color: white;
 }

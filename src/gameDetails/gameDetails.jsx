@@ -14,7 +14,12 @@ class GameDetails extends Component {
         <div className='game-details'>
           <div className='mode-status'>
             {this.props.isViewMode ? `View Mode` : `Game Mode`}
-            {` (${this.props.gameState.turnCount}/${this.props.totalTurnCount})`}
+          </div>
+          <div className='game-moves'>
+            {`Moves: ${this.props.gameState.turnCount}/${this.props.totalTurnCount}`}
+          </div>
+          <div className='tiles-on-board'>
+            {`Tiles: ${this.props.usedTiles}/28`}
           </div>
           <button className='history-back' onClick={() => this.props.goBackHistory()}
                   disabled={this.props.shouldDisableBackward}>
@@ -24,9 +29,6 @@ class GameDetails extends Component {
                   disabled={this.props.shouldDisableForward} hidden={!this.props.isViewMode}>
             {`Next`}
           </button>
-          <div className='tiles-on-board'>
-            {`Tiles: ${this.props.usedTiles}`}
-          </div>
           <Timer secondsElapsed={this.props.secondsElapsed}/>
         </div>
       );
