@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Board from '../board/board.jsx';
 import Player from '../player/player.jsx';
+import Timer from '../timer/timer.jsx';
 import {
   DIRECTIONS, MAX_TILE_DOT_NUMBER, INIT_PLAYER_TILES,
   BOARD_COLUMN_SIZE, BOARD_ROWS_SIZE, EMPTY_TILE, EMPTY_LEGAL_TILE
@@ -380,6 +381,7 @@ class Game extends Component {
                   disabled={shouldDisableForward} hidden={!isActualViewMode}>
             {`Next`}
           </button>
+          <Timer/>
         </div>
         <Board cells={currentStateToShow.cells} onTileDropped={this.onTileDropped}/>
         {
