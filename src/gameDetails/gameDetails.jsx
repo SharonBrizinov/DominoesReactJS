@@ -29,6 +29,11 @@ class GameDetails extends Component {
                   disabled={this.props.shouldDisableForward} hidden={!this.props.isViewMode}>
             {`Next`}
           </button>
+          <div className='game-reset'>
+            <button className='game-reset-btn' onClick={() => this.props.resetGame()}>
+              {this.props.isViewMode ? `New Game` : `Reset Game`}
+            </button>
+          </div>
           <Timer secondsElapsed={this.props.secondsElapsed}/>
         </div>
       );

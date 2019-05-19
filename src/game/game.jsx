@@ -17,7 +17,6 @@ class Game extends Component {
 
     this.state = {
       turnCount: 0,
-      currentPlayer: null,
       cells: Array.from(Array(BOARD_COLUMN_SIZE * BOARD_ROWS_SIZE).keys()).map((index) => {
         return {...EMPTY_LEGAL_TILE, index};
       }),
@@ -40,6 +39,7 @@ class Game extends Component {
     this.goBackHistory = this.goBackHistory.bind(this);
     this.goForwardHistory = this.goForwardHistory.bind(this);
     this.timerInterval = setInterval(this.timerTick.bind(this), TICK_TIME_MILISECONDS);
+    this.resetGame = this.resetGame.bind(this);
   }
 
   /**** Timer Handling ****/
@@ -121,6 +121,30 @@ class Game extends Component {
     this.setState({stateHistory: clonedHistory, stateHistoryIndex: newStateHistoryIndex});
   }
   /***********************/
+
+  resetGame () {
+    const emptyBankTiles = this.initTilesBank();
+    const initializedPlayers = [{name: 'Player 1', tiles: [], score: 0, drawsCount: 0}];
+    const {bankTiles, players} = this.setPlayerInitTiles(initializedPlayers, emptyBankTiles);
+
+    this.setState({
+      turnCount: 0,
+      cells: Array.from(Array(BOARD_COLUMN_SIZE * BOARD_ROWS_SIZE).keys()).map((index) => {
+        return {...EMPTY_LEGAL_TILE, index};
+      }),
+      draggedTile: null,
+      tilesOnBoard: [],
+      bankTiles: bankTiles,
+      players: players,
+      stateHistory: [],
+      stateHistoryIndex: -1,
+      isGameEnded: false,
+      isViewMode: false,
+      isGameMode: true,
+      timer: {isRunning: false, secondsElapsed: 0},
+    });
+    this.timerReset();
+  }
 
   calculcatePlayerScore(indexPlayer) {
     const currentPlayer = this.state.players[indexPlayer];
@@ -400,6 +424,7 @@ class Game extends Component {
                      shouldDisableForward={shouldDisableForward}
                      goBackHistory={this.goBackHistory}
                      goForwardHistory={this.goForwardHistory}
+                     resetGame={this.resetGame}
                      secondsElapsed={currentStateToShow.timer.secondsElapsed}
                      usedTiles={currentStateToShow.tilesOnBoard.length}/>
         <Board cells={currentStateToShow.cells} onTileDropped={this.onTileDropped}/>
