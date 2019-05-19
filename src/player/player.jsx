@@ -26,6 +26,7 @@ class Player extends Component {
         <div className='details'>
           <div className='title'>{this.state.name}</div>
           <div className='score'>{`Score: ${this.props.score}`}</div>
+          <div className='draws'>{`Draws: ${this.props.drawsCount}`}</div>
           <div className='avatar'>
             <img src={imgAvatar}/>
           </div>

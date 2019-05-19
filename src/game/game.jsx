@@ -12,7 +12,7 @@ class Game extends Component {
   constructor (props) {
     super(props);
     const emptyBankTiles = this.initTilesBank();
-    const initializedPlayers = [{name: 'Player 1', tiles: [], score: 0}];
+    const initializedPlayers = [{name: 'Player 1', tiles: [], score: 0, drawsCount: 0}];
     const {bankTiles, players} = this.setPlayerInitTiles(initializedPlayers, emptyBankTiles);
 
     this.state = {
@@ -358,6 +358,7 @@ class Game extends Component {
     // Check first that we have a new tile
     if (newTile) {
       tiles.push(newTile);
+      players[indexCurrentPlayer].drawsCount += 1;
       this.setState((prevState) => ({bankTiles, players}), () => {
         // End turn
         this.turnEnded();
@@ -409,7 +410,8 @@ class Game extends Component {
                            tiles={player.tiles}
                            onTileStartDragging={this.onTileStartDragging}
                            score={player.score}
-                           getTileFromBank={this.getTileFromBank}/>;
+                           getTileFromBank={this.getTileFromBank}
+                           drawsCount={player.drawsCount}/>;
           })
         }
       </div>
