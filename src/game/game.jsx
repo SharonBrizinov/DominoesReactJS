@@ -12,7 +12,7 @@ class Game extends Component {
   constructor (props) {
     super(props);
     const emptyBankTiles = this.initTilesBank();
-    const initializedPlayers = [{name: 'Player 1', tiles: [], score: 0, drawsCount: 0}];
+    const initializedPlayers = [{name: 'Player 1', tiles: [], score: 0, drawsCount: 0, turnTimesSeconds: []}];
     const {bankTiles, players} = this.setPlayerInitTiles(initializedPlayers, emptyBankTiles);
 
     this.state = {
@@ -30,6 +30,7 @@ class Game extends Component {
       isViewMode: false,
       isGameMode: true,
       timer: {isRunning: false, secondsElapsed: 0},
+      lastTurnStartedTime: 0,
     };
 
     this.getTileFromBank = this.getTileFromBank.bind(this);
@@ -124,7 +125,7 @@ class Game extends Component {
 
   resetGame () {
     const emptyBankTiles = this.initTilesBank();
-    const initializedPlayers = [{name: 'Player 1', tiles: [], score: 0, drawsCount: 0}];
+    const initializedPlayers = [{name: 'Player 1', tiles: [], score: 0, drawsCount: 0, turnTimesSeconds: []}];
     const {bankTiles, players} = this.setPlayerInitTiles(initializedPlayers, emptyBankTiles);
 
     this.setState({
@@ -142,6 +143,7 @@ class Game extends Component {
       isViewMode: false,
       isGameMode: true,
       timer: {isRunning: false, secondsElapsed: 0},
+      lastTurnStartedTime: 0
     });
     this.timerReset();
   }
@@ -162,7 +164,16 @@ class Game extends Component {
   turnEnded () {
     // Update turn count
     let currentTurnCount = this.state.turnCount + 1;
-    this.setState({turnCount: currentTurnCount}, () => {
+    
+    // Update current player turn time
+    const players = this.state.players;
+    const currentPlayer = players[this.getCurrentPlayerIndex()];
+    currentPlayer.turnTimesSeconds.push(this.state.timer.secondsElapsed - this.state.lastTurnStartedTime);
+
+    // Update last turn started
+    let newlastTurnStartedTime = this.state.timer.secondsElapsed;
+
+    this.setState({players: players, turnCount: currentTurnCount, lastTurnStartedTime: newlastTurnStartedTime}, () => {
       // Then check if game has ended
       this.checkGameEnded();
     });
@@ -436,7 +447,8 @@ class Game extends Component {
                            onTileStartDragging={this.onTileStartDragging}
                            score={player.score}
                            getTileFromBank={this.getTileFromBank}
-                           drawsCount={player.drawsCount}/>;
+                           drawsCount={player.drawsCount}
+                           turnTimesSeconds={player.turnTimesSeconds}/>;
           })
         }
       </div>
