@@ -32,7 +32,7 @@ class Player extends Component {
           <div className='draws'>{`Draws: ${this.props.drawsCount}`}</div>
           <div className='avg-turn'>{`Time: ${parseInt(avgTurnTimeSeconds)}`}</div>
           <div className='avatar'>
-            <img src={imgAvatar}/>
+            <img src={imgAvatar} draggable="false"/>
           </div>
           <button className='get-tile' onClick={() => this.props.getTileFromBank()} disabled={!this.isAllowedToGetMoreTiles()}>
             {`Get Tile`}
@@ -51,6 +51,7 @@ class Player extends Component {
                   rightSideNum={tile.rightSideNum}
                   leftSideNum={tile.leftSideNum}
                   direction={DIRECTIONS.vertical}
+                  isVisible={tile.isVisible}
                 />
             )
           }

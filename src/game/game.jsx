@@ -226,7 +226,8 @@ class Game extends Component {
       leftSideNum,
       direction: cells[droppedCellIndex].direction || DIRECTIONS.vertical,
       draggable: false,
-      cellIndex: droppedCellIndex
+      cellIndex: droppedCellIndex,
+      isVisible: true,
     };
 
     if (isFirstDropped || this.isLegalDrop(cells, droppedCellIndex, newTile)) {
@@ -354,10 +355,12 @@ class Game extends Component {
     return this.state.turnCount % this.state.players.length;
   }
 
-  popRandomTile (tilesArr) {
+  popRandomTile (tilesArr, setVisible=true) {
     if (tilesArr.length > 0) {
       const randomIndex = Math.floor(Math.random() * tilesArr.length);
       let tile = tilesArr.splice(randomIndex, 1)[0];
+      if (setVisible)
+        tile.isVisible = true;
       return tile;
     } else {
       alert('No more tiles in bank!');
@@ -369,7 +372,7 @@ class Game extends Component {
     const bankTiles = [];
     for (let i = 0; i <= MAX_TILE_DOT_NUMBER; i++) {
       for (let j = i; j <= MAX_TILE_DOT_NUMBER; j++) {
-        bankTiles.push({rightSideNum: i, leftSideNum: j, used: false},);
+        bankTiles.push({rightSideNum: i, leftSideNum: j, used: false, isVisible: false},);
       }
     }
     return bankTiles;

@@ -7,6 +7,7 @@
     justify-self: center;
     align-self: center;
     box-shadow: 2px 2px 1px rgb(104, 104, 104);
+    opacity: 0.0;
 }
 
 .tile hr {
@@ -32,5 +33,22 @@
 }
 
 .tile[glow="true"] {
-    box-shadow: 0 0 20px rgb(212, 216, 0);
+    box-shadow: 0 0 50px rgb(212, 216, 0);
+}
+
+.tile[visible="true"] {
+	opacity: 1;
+	animation-name: fadeInOpacity;
+	animation-iteration-count: 1;
+	animation-timing-function: ease-in;
+	animation-duration: .3s;
+}
+
+@keyframes fadeInOpacity {
+	0% {
+		opacity: 0;
+	}
+	100% {
+		opacity: 1;
+	}
 }
