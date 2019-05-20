@@ -6,6 +6,7 @@
     transition: transform .2s;
     justify-self: center;
     align-self: center;
+    box-shadow: 2px 2px 1px rgb(104, 104, 104);
 }
 
 .tile hr {
@@ -23,9 +24,13 @@
     height: 100px;
 }
 
-.tile[direction="horizontal"]{
+.tile[direction="horizontal"] {
     display: flex;
     justify-content: center;
     width: 100px;
     height: 50px;
+}
+
+.tile[glow="true"] {
+    box-shadow: 0 0 20px rgb(212, 216, 0);
 }

@@ -31,7 +31,7 @@ class Board extends Component {
         {
           this.props.cells.map((cell) => {
             return cell.tile ?
-              <Tile key={`tile-${cell.index}`} {...cell.tile}/> :
+              <Tile key={`tile-${cell.index}`} {...cell.tile} shouldGlow={this.props.shouldGlow}/> :
               this.getEmptyCell(cell);
           })
         }

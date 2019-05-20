@@ -50,7 +50,7 @@ class Game extends Component {
 
   timerReset () {
     this.setState({timer:{isRunning: true, secondsElapsed: 0}});
-    this.timerInterval = setInterval(this.tick.bind(this), TICK_TIME_MILISECONDS);
+    this.timerInterval = setInterval(this.timerTick.bind(this), TICK_TIME_MILISECONDS);
   }
 
   timerStop () {
@@ -417,6 +417,7 @@ class Game extends Component {
   render () {
     // Actual game state
     let isActualViewMode = this.state.isViewMode;
+    let isActualGameEnded = this.state.isGameEnded;
     let actualTurnCount = this.state.turnCount;
     let isHistoryEmpty = this.isHistoryEmpty();
     let shouldDisableBackward = isHistoryEmpty || (isActualViewMode && this.state.stateHistoryIndex == 0);
@@ -438,7 +439,7 @@ class Game extends Component {
                      resetGame={this.resetGame}
                      secondsElapsed={currentStateToShow.timer.secondsElapsed}
                      usedTiles={currentStateToShow.tilesOnBoard.length}/>
-        <Board cells={currentStateToShow.cells} onTileDropped={this.onTileDropped}/>
+        <Board cells={currentStateToShow.cells} onTileDropped={this.onTileDropped} shouldGlow={isActualGameEnded}/>
         {
           currentStateToShow.players.map((player, i) => {
             return <Player key={`player-${i}`}
