@@ -2,11 +2,13 @@ import React, { Component } from 'react';
 import Board from '../board/board.jsx';
 import Player from '../player/player.jsx';
 import GameDetails from '../gameDetails/gameDetails.jsx';
+import Popup from '../popup/popup.jsx'
 import {
   DIRECTIONS, MAX_TILE_DOT_NUMBER, INIT_PLAYER_TILES,
   BOARD_COLUMN_SIZE, BOARD_ROWS_SIZE, EMPTY_TILE, EMPTY_LEGAL_TILE, TICK_TIME_MILISECONDS
 } from '../consts.js';
 import './game.css';
+
 
 class Game extends Component {
   constructor (props) {
@@ -31,6 +33,8 @@ class Game extends Component {
       isGameMode: true,
       timer: {isRunning: false, secondsElapsed: 0},
       lastTurnStartedTime: 0,
+      isShowingPopup: false,
+      textPopup: "",
     };
 
     this.getTileFromBank = this.getTileFromBank.bind(this);
@@ -41,7 +45,18 @@ class Game extends Component {
     this.goForwardHistory = this.goForwardHistory.bind(this);
     this.timerInterval = setInterval(this.timerTick.bind(this), TICK_TIME_MILISECONDS);
     this.resetGame = this.resetGame.bind(this);
+    this.closePopup = this.closePopup.bind(this);
   }
+
+  /**** Popup Handling ****/
+  openPopup (text) {
+    this.setState({isShowingPopup: true, textPopup: text});
+  }
+
+  closePopup () {
+      this.setState({isShowingPopup: false, textPopup: ""});
+  }
+  /***********************/
 
   /**** Timer Handling ****/
   timerTick() {
@@ -91,8 +106,10 @@ class Game extends Component {
     if (this.state.isGameMode) {
       // Get previous saved state
       let lastState = this.state.stateHistory.pop();
-      // removing history from new state
+      // removing history and popup related items from new state
       delete lastState.stateHistory;
+      delete lastState.textPopup;
+      delete lastState.isShowingPopup;
       // Set as new state (while keeping our history safe)
       this.setState({...lastState});
     } else if (this.state.isViewMode) {
@@ -112,8 +129,10 @@ class Game extends Component {
     let newState = JSON.parse(JSON.stringify(this.state));
     // Get a copy of state history
     let clonedHistory = this.state.stateHistory.slice();
-    // removing history from new state and add new state to history
+    // removing history and popup related items from new state and add new state to history
     delete newState.stateHistory;
+    delete newState.textPopup;
+    delete newState.isShowingPopup;
     clonedHistory.push(newState);
     // Update index to last state
     let newStateHistoryIndex = this.state.stateHistoryIndex + 1;
@@ -143,7 +162,9 @@ class Game extends Component {
       isViewMode: false,
       isGameMode: true,
       timer: {isRunning: false, secondsElapsed: 0},
-      lastTurnStartedTime: 0
+      lastTurnStartedTime: 0,
+      isShowingPopup: false,
+      textPopup: "",
     });
     this.timerReset();
   }
@@ -186,6 +207,18 @@ class Game extends Component {
     });
   }
 
+  getPlayerIndexWithMostScore() {
+    let indexPlayer = 0;
+    let maxScore = 0;
+    this.state.players.forEach((player, i) => {
+      if (player.score > maxScore){
+        indexPlayer = i;
+      }
+    });
+
+    return indexPlayer;
+  }
+
   checkGameEnded () {
     let allTilesInGame = [];
 
@@ -204,7 +237,8 @@ class Game extends Component {
         // last move in the game must be kept
         this.updateHistory();
       });
-      alert('Game is over !');
+      let winnderPlayer = this.state.players[this.getPlayerIndexWithMostScore()];
+      this.openPopup(`Game is over! ${winnderPlayer.name} is the winner with a score of ${winnderPlayer.score} points!`);
       return true;
     }
     return false;
@@ -212,7 +246,7 @@ class Game extends Component {
 
   onTileDropped (droppedCellIndex) {
     if (this.state.isGameEnded) {
-      alert('Game has ended, you can\'t play!');
+      this.openPopup('Game has ended, you can\'t make any moves!');
       return;
     }
 
@@ -363,7 +397,7 @@ class Game extends Component {
         tile.isVisible = true;
       return tile;
     } else {
-      alert('No more tiles in bank!');
+      this.openPopup('No more tiles in bank!');
       return null;
     }
   }
@@ -380,7 +414,7 @@ class Game extends Component {
 
   getTileFromBank () {
     if (this.state.isGameEnded) {
-      alert('Game has ended, you can\'t request more tiles!');
+      this.openPopup('Game has ended, you can\'t request more tiles!');
       return;
     }
 
@@ -430,31 +464,36 @@ class Game extends Component {
     let currentStateToShow = isActualViewMode ? this.state.stateHistory[this.state.stateHistoryIndex] : this.state;
 
     return (
-      <div className='game' onKeyDown={this.handleKeyDown}>
-
-        <GameDetails isViewMode={isActualViewMode}
-                     gameState={currentStateToShow}
-                     totalTurnCount={actualTurnCount}
-                     shouldDisableBackward={shouldDisableBackward}
-                     shouldDisableForward={shouldDisableForward}
-                     goBackHistory={this.goBackHistory}
-                     goForwardHistory={this.goForwardHistory}
-                     resetGame={this.resetGame}
-                     secondsElapsed={currentStateToShow.timer.secondsElapsed}
-                     usedTiles={currentStateToShow.tilesOnBoard.length}/>
-        <Board cells={currentStateToShow.cells} onTileDropped={this.onTileDropped} shouldGlow={isActualGameEnded}/>
-        {
-          currentStateToShow.players.map((player, i) => {
-            return <Player key={`player-${i}`}
-                           name={player.name} id={i}
-                           tiles={player.tiles}
-                           onTileStartDragging={this.onTileStartDragging}
-                           score={player.score}
-                           getTileFromBank={this.getTileFromBank}
-                           drawsCount={player.drawsCount}
-                           turnTimesSeconds={player.turnTimesSeconds}/>;
-          })
-        }
+      <div className='game-overall'>
+        <Popup className="popup" show={this.state.isShowingPopup} close={this.closePopup}>
+          {this.state.textPopup}
+        </Popup>
+      
+        <div className='game' onKeyDown={this.handleKeyDown}> 
+          <GameDetails isViewMode={isActualViewMode}
+                      gameState={currentStateToShow}
+                      totalTurnCount={actualTurnCount}
+                      shouldDisableBackward={shouldDisableBackward}
+                      shouldDisableForward={shouldDisableForward}
+                      goBackHistory={this.goBackHistory}
+                      goForwardHistory={this.goForwardHistory}
+                      resetGame={this.resetGame}
+                      secondsElapsed={currentStateToShow.timer.secondsElapsed}
+                      usedTiles={currentStateToShow.tilesOnBoard.length}/>
+          <Board cells={currentStateToShow.cells} onTileDropped={this.onTileDropped} shouldGlow={isActualGameEnded}/>
+          {
+            currentStateToShow.players.map((player, i) => {
+              return <Player key={`player-${i}`}
+                            name={player.name} id={i}
+                            tiles={player.tiles}
+                            onTileStartDragging={this.onTileStartDragging}
+                            score={player.score}
+                            getTileFromBank={this.getTileFromBank}
+                            drawsCount={player.drawsCount}
+                            turnTimesSeconds={player.turnTimesSeconds}/>;
+            })
+          }
+        </div>
       </div>
     );
   }
