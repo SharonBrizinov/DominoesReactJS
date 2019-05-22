@@ -7,7 +7,7 @@
 }
 
 .tile[direction="vertical"] .dot-container {
-    width: 100%;
+    width: 50px;
     height: 50%;
 }
 

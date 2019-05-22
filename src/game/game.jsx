@@ -2,13 +2,12 @@ import React, { Component } from 'react';
 import Board from '../board/board.jsx';
 import Player from '../player/player.jsx';
 import GameDetails from '../gameDetails/gameDetails.jsx';
-import Popup from '../popup/popup.jsx'
+import Popup from '../popup/popup.jsx';
 import {
   DIRECTIONS, MAX_TILE_DOT_NUMBER, INIT_PLAYER_TILES,
   BOARD_COLUMN_SIZE, BOARD_ROWS_SIZE, EMPTY_TILE, EMPTY_LEGAL_TILE, TICK_TIME_MILISECONDS
 } from '../consts.js';
 import './game.css';
-
 
 class Game extends Component {
   constructor (props) {
@@ -34,7 +33,7 @@ class Game extends Component {
       timer: {isRunning: false, secondsElapsed: 0},
       lastTurnStartedTime: 0,
       isShowingPopup: false,
-      textPopup: "",
+      textPopup: '',
     };
 
     this.getTileFromBank = this.getTileFromBank.bind(this);
@@ -54,24 +53,26 @@ class Game extends Component {
   }
 
   closePopup () {
-      this.setState({isShowingPopup: false, textPopup: ""});
+    this.setState({isShowingPopup: false, textPopup: ''});
   }
+
   /***********************/
 
   /**** Timer Handling ****/
-  timerTick() {
-    this.setState({timer:{...this.state.timer, secondsElapsed: this.state.timer.secondsElapsed+1}});
+  timerTick () {
+    this.setState({timer: {...this.state.timer, secondsElapsed: this.state.timer.secondsElapsed + 1}});
   }
 
   timerReset () {
-    this.setState({timer:{isRunning: true, secondsElapsed: 0}});
+    this.setState({timer: {isRunning: true, secondsElapsed: 0}});
     this.timerInterval = setInterval(this.timerTick.bind(this), TICK_TIME_MILISECONDS);
   }
 
   timerStop () {
-    this.setState({timer:{...this.state.timer, isRunning: false}});
-    clearInterval(this.timerInterval)
+    this.setState({timer: {...this.state.timer, isRunning: false}});
+    clearInterval(this.timerInterval);
   }
+
   /***********************/
 
   /**** History ****/
@@ -140,6 +141,7 @@ class Game extends Component {
     // Update the new state history array
     this.setState({stateHistory: clonedHistory, stateHistoryIndex: newStateHistoryIndex});
   }
+
   /***********************/
 
   resetGame () {
@@ -164,14 +166,14 @@ class Game extends Component {
       timer: {isRunning: false, secondsElapsed: 0},
       lastTurnStartedTime: 0,
       isShowingPopup: false,
-      textPopup: "",
+      textPopup: '',
     });
     this.timerReset();
   }
 
-  calculcatePlayerScore(indexPlayer) {
+  calculcatePlayerScore (indexPlayer) {
     const currentPlayer = this.state.players[indexPlayer];
-    const currentPlayerTiles = currentPlayer.tiles
+    const currentPlayerTiles = currentPlayer.tiles;
     let playerSumPoints = 0;
 
     currentPlayerTiles.forEach((tile) => {
@@ -185,7 +187,7 @@ class Game extends Component {
   turnEnded () {
     // Update turn count
     let currentTurnCount = this.state.turnCount + 1;
-    
+
     // Update current player turn time
     const players = this.state.players;
     const currentPlayer = players[this.getCurrentPlayerIndex()];
@@ -207,11 +209,11 @@ class Game extends Component {
     });
   }
 
-  getPlayerIndexWithMostScore() {
+  getPlayerIndexWithMostScore () {
     let indexPlayer = 0;
     let maxScore = 0;
     this.state.players.forEach((player, i) => {
-      if (player.score > maxScore){
+      if (player.score > maxScore) {
         indexPlayer = i;
       }
     });
@@ -302,7 +304,7 @@ class Game extends Component {
       newTile.leftSideNum = rightSideNum;
       return legal;
     }
-    
+
     return false;
   }
 
@@ -389,7 +391,7 @@ class Game extends Component {
     return this.state.turnCount % this.state.players.length;
   }
 
-  popRandomTile (tilesArr, setVisible=true) {
+  popRandomTile (tilesArr, setVisible = true) {
     if (tilesArr.length > 0) {
       const randomIndex = Math.floor(Math.random() * tilesArr.length);
       let tile = tilesArr.splice(randomIndex, 1)[0];
@@ -464,37 +466,41 @@ class Game extends Component {
     let currentStateToShow = isActualViewMode ? this.state.stateHistory[this.state.stateHistoryIndex] : this.state;
 
     return (
-      <div className='game-overall'>
-        <Popup className="popup" show={this.state.isShowingPopup} close={this.closePopup}>
-          {this.state.textPopup}
-        </Popup>
-      
-        <div className='game' onKeyDown={this.handleKeyDown}> 
-          <GameDetails isViewMode={isActualViewMode}
-                      gameState={currentStateToShow}
-                      totalTurnCount={actualTurnCount}
-                      shouldDisableBackward={shouldDisableBackward}
-                      shouldDisableForward={shouldDisableForward}
-                      goBackHistory={this.goBackHistory}
-                      goForwardHistory={this.goForwardHistory}
-                      resetGame={this.resetGame}
-                      secondsElapsed={currentStateToShow.timer.secondsElapsed}
-                      usedTiles={currentStateToShow.tilesOnBoard.length}/>
-          <Board cells={currentStateToShow.cells} onTileDropped={this.onTileDropped} shouldGlow={isActualGameEnded}/>
-          {
-            currentStateToShow.players.map((player, i) => {
-              return <Player key={`player-${i}`}
-                            name={player.name} id={i}
-                            tiles={player.tiles}
-                            onTileStartDragging={this.onTileStartDragging}
-                            score={player.score}
-                            getTileFromBank={this.getTileFromBank}
-                            drawsCount={player.drawsCount}
-                            turnTimesSeconds={player.turnTimesSeconds}/>;
-            })
-          }
+      <>
+        {
+          this.state.isShowingPopup &&
+          <Popup close={this.closePopup}>
+            {this.state.textPopup}
+          </Popup>
+        }
+        <div className='game-overall'>
+          <div className='game' onKeyDown={this.handleKeyDown}>
+            <GameDetails isViewMode={isActualViewMode}
+                         gameState={currentStateToShow}
+                         totalTurnCount={actualTurnCount}
+                         shouldDisableBackward={shouldDisableBackward}
+                         shouldDisableForward={shouldDisableForward}
+                         goBackHistory={this.goBackHistory}
+                         goForwardHistory={this.goForwardHistory}
+                         resetGame={this.resetGame}
+                         secondsElapsed={currentStateToShow.timer.secondsElapsed}
+                         usedTiles={currentStateToShow.tilesOnBoard.length}/>
+            <Board cells={currentStateToShow.cells} onTileDropped={this.onTileDropped} shouldGlow={isActualGameEnded}/>
+            {
+              currentStateToShow.players.map((player, i) => {
+                return <Player key={`player-${i}`}
+                               name={player.name} id={i}
+                               tiles={player.tiles}
+                               onTileStartDragging={this.onTileStartDragging}
+                               score={player.score}
+                               getTileFromBank={this.getTileFromBank}
+                               drawsCount={player.drawsCount}
+                               turnTimesSeconds={player.turnTimesSeconds}/>;
+              })
+            }
+          </div>
         </div>
-      </div>
+      </>
     );
   }
 }

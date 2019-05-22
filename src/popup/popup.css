@@ -1,10 +1,22 @@
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    z-index: 10;
+    background-color: rgba(0, 0, 0, 0.75);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 .popup-wrapper {
     background: white;
     border: 1px solid #d0cccc;
     box-shadow: 0 5px 8px 0 rgba(0,0,0,0.2), 0 7px 20px 0 rgba(0,0,0,0.17);
-    margin: 100px auto 0;
     transition: all .5s;
-    width: 60%;
+    margin-bottom: 25%;
 }
 
 .popup-header {
@@ -30,9 +42,10 @@
 .close-popup-btn {
     color: white;
     cursor: pointer;
-    float: right;
     font-size: 30px;
-    margin: 0;
+    margin-left: 10px;
+    bottom: 3px;
+    position: relative;
 }
 
 .close-popup-btn:hover {

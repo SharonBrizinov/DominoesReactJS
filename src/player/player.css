@@ -2,20 +2,39 @@
     position: fixed;
     bottom: 0;
     left: 50%;
-    height: 90px;
+    height: 130px;
     background-color: rgb(151, 178, 205);
-    border-radius: 9px 9px 0 0;
-    margin-left: -250px;
+    border-radius: 15px 15px 0 0;
     font-size: 17px;
     display: flex;
     align-items: flex-end;
     padding: 8px 8px 25px 8px;
+    transform: translate(-50%, 0);
 }
 
 .player .hand-deck {
     height: 110%;
-    min-width: 450px;
+    width: 450px;
     display: flex;
+    overflow-x: scroll;
+}
+
+.player .hand-deck::-webkit-scrollbar {
+    -webkit-appearance: none;
+}
+
+.player .hand-deck::-webkit-scrollbar:vertical {
+    width: 11px;
+}
+
+.player .hand-deck::-webkit-scrollbar:horizontal {
+    height: 11px;
+}
+
+.player .hand-deck::-webkit-scrollbar-thumb {
+    border-radius: 8px;
+    border: 2px solid black; /* should match background, can't be transparent */
+    background-color: rgba(0, 0, 0, .5);
 }
 
 .player .hand-deck .tile {
@@ -28,7 +47,7 @@
     flex-direction: column;
     justify-content: space-around;
     height: 100%;
-    width: 70px;
+    width: 100px;
     margin-right: 10px;
 }
 
