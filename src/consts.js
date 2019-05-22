@@ -9,5 +9,5 @@ export const MAX_PLAYER_HAND_TILES = 28;
 export const BOARD_COLUMN_SIZE = 20;
 export const BOARD_ROWS_SIZE = 10;
 export const EMPTY_TILE = {tile: null, legal: false};
-export const EMPTY_LEGAL_TILE = {tile: null, legal: true};
+export const EMPTY_LEGAL_TILE = {tile: null, legal: true, direction: DIRECTIONS.vertical};
 export const TICK_TIME_MILISECONDS = 1000;

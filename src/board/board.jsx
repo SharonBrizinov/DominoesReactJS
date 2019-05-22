@@ -41,7 +41,7 @@ class Board extends Component {
 
   getEmptyCell (cell) {
     const cellKey = `cell-${cell.index}`;
-    return cell.legal ? <EmptyCell key={cellKey} index={cell.index}/> : <LegalCell key={cellKey} />;
+    return cell.legal ? <EmptyCell key={cellKey} index={cell.index} direction={cell.direction}/> : <LegalCell key={cellKey} />;
   }
 }
 

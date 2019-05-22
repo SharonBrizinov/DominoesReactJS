@@ -1,8 +1,8 @@
 import React from 'react';
 import './emptyCell.css'
 
-const EmptyCell = ({index}) => {
-  const extraAttrs = {['data-index']: index};
+const EmptyCell = ({index, direction}) => {
+  const extraAttrs = {['data-index']: index, ['data-direction']: direction};
 
   return (
     <div className='empty-cell' {...extraAttrs}

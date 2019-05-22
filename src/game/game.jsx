@@ -257,10 +257,13 @@ class Game extends Component {
     const {tiles} = players[indexCurrentPlayer];
     const {rightSideNum, leftSideNum, index} = this.state.draggedTile;
     const isFirstDropped = tilesOnBoard.length === 0;
+    const isEqualNumbersTile = leftSideNum=== rightSideNum;
+    const droppedCellDirection = cells[droppedCellIndex].direction;
+    const potentialDirection = isEqualNumbersTile && !isFirstDropped ? this.getOppositeDirection(droppedCellDirection) : droppedCellDirection;
     const newTile = {
       rightSideNum,
       leftSideNum,
-      direction: cells[droppedCellIndex].direction || DIRECTIONS.vertical,
+      direction: potentialDirection,
       draggable: false,
       cellIndex: droppedCellIndex,
       isVisible: true,
@@ -284,7 +287,7 @@ class Game extends Component {
 
       this.setLegalCells(cells, tilesOnBoard);
 
-      this.setState((prevState) => ({cells, players, tilesOnBoard}), () => {
+      this.setState((_) => ({cells, players, tilesOnBoard}), () => {
         // End turn
         this.turnEnded();
       });
@@ -313,10 +316,10 @@ class Game extends Component {
     const downCell = cells[droppedCellIndex + BOARD_COLUMN_SIZE];
     const leftCell = cells[droppedCellIndex - 1];
     const rightCell = cells[droppedCellIndex + 1];
-    const upLegalDrop = !upCell.tile || upCell.tile && leftSideNum === upCell.tile.rightSideNum;
-    const downLegalDrop = !downCell.tile || downCell.tile && rightSideNum === downCell.tile.leftSideNum;
-    const leftLegalDrop = !leftCell.tile || leftCell.tile && leftSideNum === leftCell.tile.rightSideNum;
-    const rightLegalDrop = !rightCell.tile || rightCell.tile && rightSideNum === rightCell.tile.leftSideNum;
+    const upLegalDrop = !upCell || !upCell.tile || upCell.tile && leftSideNum === upCell.tile.rightSideNum;
+    const downLegalDrop = !downCell || !downCell.tile || downCell.tile && rightSideNum === downCell.tile.leftSideNum;
+    const leftLegalDrop = !leftCell || !leftCell.tile || leftCell.tile && leftSideNum === leftCell.tile.rightSideNum;
+    const rightLegalDrop = !rightCell || !rightCell.tile || rightCell.tile && rightSideNum === rightCell.tile.leftSideNum;
 
     return upLegalDrop && downLegalDrop && leftLegalDrop && rightLegalDrop;
   }
@@ -340,8 +343,12 @@ class Game extends Component {
   }
 
   initIllegalCells (cells) {
-    cells.forEach((cell) => {
-      cell.legal = false;
+    const tilesOnBoard = this.state.tilesOnBoard.map((tile) => tile.cellIndex);
+    cells.forEach((cell, i) => {
+      if (!tilesOnBoard.includes(i)) {
+        cell.legal = false;
+        cell.direction = null;
+      }
     });
   }
 
@@ -379,7 +386,7 @@ class Game extends Component {
       legalIndices = [...(rightSideNum === leftSideNum ? horizontalIndices : []), ...legalIndices];
 
       legalIndices.forEach((legal) => {
-        if (!cells[legal.index].tile) {
+        if (cells[legal.index] && !cells[legal.index].tile) {
           cells[legal.index].legal = true;
           cells[legal.index].direction = legal.direction;
         }
@@ -451,6 +458,12 @@ class Game extends Component {
     });
 
     return {players, bankTiles};
+  }
+
+  getOppositeDirection (direction) {
+    if (direction === DIRECTIONS.vertical)
+      return DIRECTIONS.horizontal;
+    return DIRECTIONS.vertical;
   }
 
   render () {
