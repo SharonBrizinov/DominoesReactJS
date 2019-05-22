@@ -16,7 +16,7 @@ class Player extends Component {
 
   render () {
     let turnTimesSeconds = this.props.turnTimesSeconds;
-    let avgTurnTimeSeconds = turnTimesSeconds.length === 0 ? 0 : turnTimesSeconds.reduce((a,b) => a + b, 0) / turnTimesSeconds.length;
+    let avgTurnTimeSeconds = turnTimesSeconds.length === 0 ? 0 : turnTimesSeconds.reduce((a, b) => a + b, 0) / turnTimesSeconds.length;
 
     return (
       <div className='player' data-id={this.state.id}>
@@ -28,9 +28,11 @@ class Player extends Component {
           <div className='avatar'>
             <img src={imgAvatar} draggable="false"/>
           </div>
-          <button className='get-tile' onClick={() => this.props.getTileFromBank()} disabled={!this.props.isAllowedToGetMoreTiles}>
+          {!this.props.isGameEnded &&
+          <button className='get-tile' onClick={() => this.props.getTileFromBank()}
+                  disabled={!this.props.isAllowedToGetMoreTiles}>
             {`Get Tile`}
-          </button>
+          </button>}
         </div>
         <div className='hand-deck'>
           {

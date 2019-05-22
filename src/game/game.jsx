@@ -514,6 +514,7 @@ class Game extends Component {
                              getTileFromBank={this.getTileFromBank}
                              drawsCount={player.drawsCount}
                              turnTimesSeconds={player.turnTimesSeconds}
+                             isGameEnded={this.state.isGameEnded}
                              isAllowedToGetMoreTiles={this.isAllowedToGetMoreTiles(player)}/>;
             })
           }
