@@ -2,7 +2,7 @@
     position: fixed;
     bottom: 0;
     left: 50%;
-    height: 130px;
+    height: 140px;
     background-color: rgb(151, 178, 205);
     border-radius: 15px 15px 0 0;
     font-size: 17px;
@@ -49,18 +49,16 @@
     height: 100%;
     width: 100px;
     margin-right: 10px;
-}
-
-.player .title,
-.player .score {
-    text-align: left;
+    font-size: 17px;
+    text-align: center;
 }
 
 .player .avatar {
     vertical-align: middle;
-    width: 50px;
+    width: 100%;
     height: 50px;
     border-radius: 50%;
+    text-align: center;
 }
 
 .player .avatar img {

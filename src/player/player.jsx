@@ -21,10 +21,10 @@ class Player extends Component {
     return (
       <div className='player' data-id={this.state.id}>
         <div className='details'>
-          <div className='title'>{this.state.name}</div>
-          <div className='score'>{`Score: ${this.props.score}`}</div>
-          <div className='draws'>{`Draws: ${this.props.drawsCount}`}</div>
-          <div className='avg-turn'>{`Time: ${parseInt(avgTurnTimeSeconds)}`}</div>
+          <span className='title'>{this.state.name}</span>
+          <span className='score'>{`Score: ${this.props.score}`}</span>
+          <span className='draws'>{`Draws: ${this.props.drawsCount}`}</span>
+          <span className='avg-turn'>{`Time: ${parseInt(avgTurnTimeSeconds)}`}</span>
           <div className='avatar'>
             <img src={imgAvatar} draggable="false"/>
           </div>

@@ -337,13 +337,13 @@ class Game extends Component {
 
   checkToEnableScrolling (event) {
     console.log('event.clientY', event.clientY);
-    if (event.clientY < 150 || event.clientY > 500) {
+    if (event.clientY < 250 || event.clientY > 500) {
       document.body.style['overflow-y'] = 'scroll';
     }
 
     console.log('event.clientX', event.clientX);
 
-    if (event.clientX < 150 || event.clientX > 850) {
+    if (event.clientX < 250 || event.clientX > 850) {
       document.body.style['overflow-x'] = 'scroll';
     }
   }

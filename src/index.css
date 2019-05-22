@@ -1,6 +1,43 @@
 body {
     background-image: url("./images/woord.jpg");
     background-size: cover;
+    font-family: Arial, Helvetica, sans-serif;
     overflow-x: hidden;
     overflow-y: hidden;
+}
+
+button {
+    font-size: 12px;
+    color: #fff !important;
+    text-transform: uppercase;
+    background: #60a3bc;
+    padding: 4px;
+    border-radius: 50px;
+    display: inline-block;
+    border: none;
+}
+
+button:hover {
+    text-shadow: 0 0 6px rgba(255, 255, 255, 1);
+    -webkit-box-shadow: 0 5px 40px -10px rgba(0,0,0,0.57);
+    -moz-box-shadow: 0 5px 40px -10px rgba(0,0,0,0.57);
+    transition: all 0.4s ease 0s;
+}
+
+body::-webkit-scrollbar {
+    -webkit-appearance: none;
+}
+
+body::-webkit-scrollbar:vertical {
+    width: 11px;
+}
+
+body::-webkit-scrollbar:horizontal {
+    height: 11px;
+}
+
+body::-webkit-scrollbar-thumb {
+    border-radius: 8px;
+    border: 2px solid black; /* should match background, can't be transparent */
+    background-color: rgba(0, 0, 0, .5);
 }

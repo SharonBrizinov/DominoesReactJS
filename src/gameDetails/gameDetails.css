@@ -1,6 +1,48 @@
+.game-details {
+    display: grid;
+    width: 300px;
+    height: 115px;
+    grid-template-columns: repeat(2, auto);
+    grid-template-rows: repeat(2, auto);
+    position: fixed;
+    top: 0;
+    left: 50%;
+    background-color: rgb(171, 175, 179);
+    border-radius: 0 0 15px 15px;
+    font-size: 17px;
+    align-items: center;
+    padding: 8px;
+    transform: translate(-50%, 0);
+    text-align: center;
+    grid-gap: 1px;
+}
+
+.history-forward {
+    display: block;
+    opacity: 0;
+}
+
 .mode-status,
 .tiles-on-board,
-.game-moves{
+.game-moves {
     font-weight: normal;
     color: white;
+}
+
+
+.game-details .timer {
+    grid-column-start: 1;
+    grid-column-end: 3;
+    text-align: center;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.game-details .timer p {
+    margin: 5px 0 0 0;
+}
+
+.game-details button {
+    margin: auto;
+    width: 130px;
 }
