@@ -14,7 +14,7 @@ class Board extends Component {
     e.preventDefault();
     if (e.target.classList.contains('empty-cell') ) {
       e.target.classList.remove('drag-enter');
-      this.props.onTileDropped(parseInt(e.target.getAttribute('data-index')));
+      this.props.onTileDropped(parseInt(e.target.getAttribute('data-index')),e);
     }
   }
 

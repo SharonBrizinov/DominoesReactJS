@@ -47,6 +47,10 @@ class Game extends Component {
     this.closePopup = this.closePopup.bind(this);
   }
 
+  componentDidMount () {
+    window.scrollTo(500, 500);
+  }
+
   /**** Popup Handling ****/
   openPopup (text) {
     this.setState({isShowingPopup: true, textPopup: text});
@@ -246,7 +250,7 @@ class Game extends Component {
     return false;
   }
 
-  onTileDropped (droppedCellIndex) {
+  onTileDropped (droppedCellIndex, event) {
     if (this.state.isGameEnded) {
       this.openPopup('Game has ended, you can\'t make any moves!');
       return;
@@ -257,7 +261,7 @@ class Game extends Component {
     const {tiles} = players[indexCurrentPlayer];
     const {rightSideNum, leftSideNum, index} = this.state.draggedTile;
     const isFirstDropped = tilesOnBoard.length === 0;
-    const isEqualNumbersTile = leftSideNum=== rightSideNum;
+    const isEqualNumbersTile = leftSideNum === rightSideNum;
     const droppedCellDirection = cells[droppedCellIndex].direction;
     const potentialDirection = isEqualNumbersTile && !isFirstDropped ? this.getOppositeDirection(droppedCellDirection) : droppedCellDirection;
     const newTile = {
@@ -272,6 +276,7 @@ class Game extends Component {
     if (isFirstDropped || this.isLegalDrop(cells, droppedCellIndex, newTile)) {
       // Save current state, before any modifications
       this.updateHistory();
+      this.scrollToDropedCell(event);
 
       // Update score
       players[indexCurrentPlayer].score += (rightSideNum + leftSideNum);
@@ -324,20 +329,23 @@ class Game extends Component {
     return upLegalDrop && downLegalDrop && leftLegalDrop && rightLegalDrop;
   }
 
-  moveAllTilesOnBoardRight (droppedCellIndex, cells, tilesOnBoard) {
-    if (droppedCellIndex % BOARD_COLUMN_SIZE === 0) {
-      tilesOnBoard.forEach((tile) => {
-        cells[tile.cellIndex] = {...EMPTY_TILE, index: tile.cellIndex};
-        cells[tile.cellIndex + 1] = {...EMPTY_TILE, tile};
-        tile.cellIndex = tile.cellIndex + 1;
-      });
+  scrollToCenter () {
+    const gameElement = document.getElementsByClassName('board')[0];
+    const computedBodyStyle = window.getComputedStyle(gameElement);
+    const width = parseInt(computedBodyStyle.width, 10);
+    const height = parseInt(computedBodyStyle.height, 10);
 
-      cells.forEach((cell, i) => {
-        cell.index = i;
-      });
+    console.log(width / 4, height / 4);
 
-      this.initIllegalCells(cells);
+    window.scrollTo(width / 2, height / 2);
+  }
 
+  scrollToDropedCell (event) {
+    if(event.clientY < 150 || event.clientY > 550){
+      document.body.style['overflow-y'] = 'scroll';
+    }
+
+    if(event.clientX < 150 || event.clientX > 550){
       document.body.style['overflow-x'] = 'scroll';
     }
   }
@@ -486,32 +494,30 @@ class Game extends Component {
             {this.state.textPopup}
           </Popup>
         }
-        <div className='game-overall'>
-          <div className='game' onKeyDown={this.handleKeyDown}>
-            <GameDetails isViewMode={isActualViewMode}
-                         gameState={currentStateToShow}
-                         totalTurnCount={actualTurnCount}
-                         shouldDisableBackward={shouldDisableBackward}
-                         shouldDisableForward={shouldDisableForward}
-                         goBackHistory={this.goBackHistory}
-                         goForwardHistory={this.goForwardHistory}
-                         resetGame={this.resetGame}
-                         secondsElapsed={currentStateToShow.timer.secondsElapsed}
-                         usedTiles={currentStateToShow.tilesOnBoard.length}/>
-            <Board cells={currentStateToShow.cells} onTileDropped={this.onTileDropped} shouldGlow={isActualGameEnded}/>
-            {
-              currentStateToShow.players.map((player, i) => {
-                return <Player key={`player-${i}`}
-                               name={player.name} id={i}
-                               tiles={player.tiles}
-                               onTileStartDragging={this.onTileStartDragging}
-                               score={player.score}
-                               getTileFromBank={this.getTileFromBank}
-                               drawsCount={player.drawsCount}
-                               turnTimesSeconds={player.turnTimesSeconds}/>;
-              })
-            }
-          </div>
+        <div className='game' onKeyDown={this.handleKeyDown}>
+          <GameDetails isViewMode={isActualViewMode}
+                       gameState={currentStateToShow}
+                       totalTurnCount={actualTurnCount}
+                       shouldDisableBackward={shouldDisableBackward}
+                       shouldDisableForward={shouldDisableForward}
+                       goBackHistory={this.goBackHistory}
+                       goForwardHistory={this.goForwardHistory}
+                       resetGame={this.resetGame}
+                       secondsElapsed={currentStateToShow.timer.secondsElapsed}
+                       usedTiles={currentStateToShow.tilesOnBoard.length}/>
+          <Board cells={currentStateToShow.cells} onTileDropped={this.onTileDropped} shouldGlow={isActualGameEnded}/>
+          {
+            currentStateToShow.players.map((player, i) => {
+              return <Player key={`player-${i}`}
+                             name={player.name} id={i}
+                             tiles={player.tiles}
+                             onTileStartDragging={this.onTileStartDragging}
+                             score={player.score}
+                             getTileFromBank={this.getTileFromBank}
+                             drawsCount={player.drawsCount}
+                             turnTimesSeconds={player.turnTimesSeconds}/>;
+            })
+          }
         </div>
       </>
     );
