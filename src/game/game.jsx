@@ -8,6 +8,7 @@ import {
   BOARD_COLUMN_SIZE, BOARD_ROWS_SIZE, EMPTY_TILE, EMPTY_LEGAL_TILE, TICK_TIME_MILISECONDS
 } from '../consts.js';
 import './game.css';
+import { MAX_PLAYER_HAND_TILES } from '../consts';
 
 class Game extends Component {
   constructor (props) {
@@ -48,7 +49,7 @@ class Game extends Component {
   }
 
   componentDidMount () {
-    window.scrollTo(500, 500);
+    window.scrollTo(500, 500); // scroll to center of screen
   }
 
   /**** Popup Handling ****/
@@ -89,6 +90,14 @@ class Game extends Component {
 
   isHistoryEmpty () {
     return this.state.stateHistory.length === 0;
+  }
+
+  getUnusedTiles (player) {
+    return player.tiles.filter((tile) => {return !tile.used;});
+  }
+
+  isAllowedToGetMoreTiles (player) {
+    return this.getUnusedTiles(player).length < MAX_PLAYER_HAND_TILES;
   }
 
   goForwardHistory () {
@@ -226,14 +235,11 @@ class Game extends Component {
   }
 
   checkGameEnded () {
-    let allTilesInGame = [];
-
-    // Collect tiles from all players in game, and filter for unused tiles
-    this.state.players.forEach((_, i) => { allTilesInGame.push(...this.state.players[i].tiles); });
-    let unusedPlayersTiles = allTilesInGame.filter((tile) => {return !tile.used;});
+    debugger;
+    const winnerPlayer = this.state.players.filter((player) => {return this.getUnusedTiles(player).length === 0; })[0];
 
     // No tiles left in bank and all players used their tiles
-    if (this.state.bankTiles.length === 0 && unusedPlayersTiles.length === 0) {
+    if (winnerPlayer) {
       // Game ended, save current state and update flag
       let isGameEnded = true;
       let isViewMode = true;
@@ -243,8 +249,8 @@ class Game extends Component {
         // last move in the game must be kept
         this.updateHistory();
       });
-      let winnderPlayer = this.state.players[this.getPlayerIndexWithMostScore()];
-      this.openPopup(`Game is over! ${winnderPlayer.name} is the winner with a score of ${winnderPlayer.score} points!`);
+
+      this.openPopup(`Game is over! ${winnerPlayer.name} is the winner with a score of ${winnerPlayer.score} points!`);
       return true;
     }
     return false;
@@ -276,7 +282,7 @@ class Game extends Component {
     if (isFirstDropped || this.isLegalDrop(cells, droppedCellIndex, newTile)) {
       // Save current state, before any modifications
       this.updateHistory();
-      this.scrollToDropedCell(event);
+      this.checkToEnableScrolling(event);
 
       // Update score
       players[indexCurrentPlayer].score += (rightSideNum + leftSideNum);
@@ -329,23 +335,15 @@ class Game extends Component {
     return upLegalDrop && downLegalDrop && leftLegalDrop && rightLegalDrop;
   }
 
-  scrollToCenter () {
-    const gameElement = document.getElementsByClassName('board')[0];
-    const computedBodyStyle = window.getComputedStyle(gameElement);
-    const width = parseInt(computedBodyStyle.width, 10);
-    const height = parseInt(computedBodyStyle.height, 10);
-
-    console.log(width / 4, height / 4);
-
-    window.scrollTo(width / 2, height / 2);
-  }
-
-  scrollToDropedCell (event) {
-    if(event.clientY < 150 || event.clientY > 550){
+  checkToEnableScrolling (event) {
+    console.log('event.clientY', event.clientY);
+    if (event.clientY < 150 || event.clientY > 500) {
       document.body.style['overflow-y'] = 'scroll';
     }
 
-    if(event.clientX < 150 || event.clientX > 550){
+    console.log('event.clientX', event.clientX);
+
+    if (event.clientX < 150 || event.clientX > 850) {
       document.body.style['overflow-x'] = 'scroll';
     }
   }
@@ -515,7 +513,8 @@ class Game extends Component {
                              score={player.score}
                              getTileFromBank={this.getTileFromBank}
                              drawsCount={player.drawsCount}
-                             turnTimesSeconds={player.turnTimesSeconds}/>;
+                             turnTimesSeconds={player.turnTimesSeconds}
+                             isAllowedToGetMoreTiles={this.isAllowedToGetMoreTiles(player)}/>;
             })
           }
         </div>

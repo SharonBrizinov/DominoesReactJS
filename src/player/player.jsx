@@ -13,12 +13,6 @@ class Player extends Component {
       score: props.score,
     };
   }
-  getUnusedTiles () {
-    return this.props.tiles.filter((tile) => {return !tile.used});
-  }
-  isAllowedToGetMoreTiles() {
-    return this.getUnusedTiles().length < MAX_PLAYER_HAND_TILES;
-  }
 
   render () {
     let turnTimesSeconds = this.props.turnTimesSeconds;
@@ -34,7 +28,7 @@ class Player extends Component {
           <div className='avatar'>
             <img src={imgAvatar} draggable="false"/>
           </div>
-          <button className='get-tile' onClick={() => this.props.getTileFromBank()} disabled={!this.isAllowedToGetMoreTiles()}>
+          <button className='get-tile' onClick={() => this.props.getTileFromBank()} disabled={!this.props.isAllowedToGetMoreTiles}>
             {`Get Tile`}
           </button>
         </div>
