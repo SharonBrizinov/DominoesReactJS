@@ -27,7 +27,7 @@ class GameDetails extends Component {
         </button>
         <button className='history-forward' onClick={() => this.props.goForwardHistory()}
                 disabled={this.props.shouldDisableForward}
-                style={{visibility: this.props.isViewMode ? 1  : 0}}>
+                style={{visibility: this.props.isViewMode ? 'visible'  : 'hidden'}}>
           {`Next`}
         </button>
         <div className='game-reset'>

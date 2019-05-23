@@ -69,6 +69,7 @@ class Game extends Component {
   }
 
   timerReset () {
+    this.timerStop();
     this.setState({timer: {isRunning: true, secondsElapsed: 0}});
     this.timerInterval = setInterval(this.timerTick.bind(this), TICK_TIME_MILISECONDS);
   }
@@ -336,12 +337,12 @@ class Game extends Component {
   }
 
   checkToEnableScrolling (event) {
-    console.log('event.clientY', event.clientY);
+    //console.log('event.clientY', event.clientY);
     if (event.clientY < 250 || event.clientY > 500) {
       document.body.style['overflow-y'] = 'scroll';
     }
 
-    console.log('event.clientX', event.clientX);
+    //console.log('event.clientX', event.clientX);
 
     if (event.clientX < 250 || event.clientX > 850) {
       document.body.style['overflow-x'] = 'scroll';
