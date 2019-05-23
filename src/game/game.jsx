@@ -212,7 +212,14 @@ class Game extends Component {
 
     this.setState({players: players, turnCount: currentTurnCount, lastTurnStartedTime: newlastTurnStartedTime}, () => {
       // Then check if game has ended
-      this.checkGameEnded();
+      if (!this.checkGameEnded()) {
+        // If game not ended, check that new current player can play (make a valid move)
+        //  if he can't pass the turn
+        const newCurrentPlayer = this.state.players[this.getCurrentPlayerIndex()];
+        if (!this.isPlayerCanPlay(newCurrentPlayer)) {
+          this.turnEnded();
+        }
+      }
     });
 
   }
@@ -235,12 +242,40 @@ class Game extends Component {
     return indexPlayer;
   }
 
-  checkGameEnded () {
-    debugger;
-    const winnerPlayer = this.state.players.filter((player) => {return this.getUnusedTiles(player).length === 0; })[0];
+  isPlayerCanPlay (player) {
+    // Check:
+    //  - Player can draw from bank (bank isn't emtpy).
+    //  - OR player has a legal move - can drop one of his unused tiles on the board.
+    
+    // TODO: test all player's unused tiles with the function 'isLegalDrop'
+    //  this.isLegalDrop(cells, droppedCellIndex, newTile)
+    return true;
+  }
 
-    // No tiles left in bank and all players used their tiles
-    if (winnerPlayer) {
+  isExistsPlayerThatCanPlay () {
+    for (let player of this.state.players) {
+      if (this.isPlayerCanPlay(player)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  checkGameEnded () {
+    // Game ends when:
+    //  - One of the player used all of his tiles --> the winner is the player who used all of his tiles first.
+    //  - All players have no tile to drop        --> the winner is the player with the highest score.
+    let winnerPlayer = null;
+
+    // Get first player that used all of his tiles
+    const playerWhoUsedAllTiles = this.state.players.filter((player) => {return this.getUnusedTiles(player).length === 0; })[0];
+    const isExistsPlayerThatCanPlay = this.isExistsPlayerThatCanPlay();
+
+    if (playerWhoUsedAllTiles || !isExistsPlayerThatCanPlay) {
+      // If a player finished all tiles - he is the winner, else - if no player can play, then the winner is the one with the highest score.
+      const playerWithHighestScore = this.state.players[this.getPlayerIndexWithMostScore()];
+      winnerPlayer = playerWhoUsedAllTiles ? playerWhoUsedAllTiles : playerWithHighestScore;
+
       // Game ended, save current state and update flag
       let isGameEnded = true;
       let isViewMode = true;

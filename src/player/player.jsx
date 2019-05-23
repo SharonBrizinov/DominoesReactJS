@@ -24,7 +24,7 @@ class Player extends Component {
           <span className='title'>{this.state.name}</span>
           <span className='score'>{`Score: ${this.props.score}`}</span>
           <span className='draws'>{`Draws: ${this.props.drawsCount}`}</span>
-          <span className='avg-turn'>{`Time: ${parseInt(avgTurnTimeSeconds)}`}</span>
+          <span className='avg-turn'>{`Avg time: ${parseInt(avgTurnTimeSeconds)}`}</span>
           <div className='avatar'>
             <img src={imgAvatar} draggable="false"/>
           </div>
