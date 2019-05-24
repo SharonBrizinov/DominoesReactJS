@@ -12,6 +12,10 @@
     transform: translate(-50%, 0);
 }
 
+.title {
+    font-weight: bold;
+}
+
 .player .hand-deck {
     height: 110%;
     width: 450px;

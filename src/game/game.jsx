@@ -244,12 +244,33 @@ class Game extends Component {
 
   isPlayerCanPlay (player) {
     // Check:
+    //  - First drop (board is empty).
     //  - Player can draw from bank (bank isn't emtpy).
     //  - OR player has a legal move - can drop one of his unused tiles on the board.
     
-    // TODO: test all player's unused tiles with the function 'isLegalDrop'
-    //  this.isLegalDrop(cells, droppedCellIndex, newTile)
-    return true;
+    const {cells, tilesOnBoard, bankTiles} = this.state;
+
+    // The board is empty, any cell is legal
+    if (tilesOnBoard.length === 0) {
+      return true;
+    }
+    // Check there are still some tiles in the bank
+    if (bankTiles.length > 0) {
+      return true;
+    }
+    // Go over all player's unused tiles and try to find a legal cell to drop in ==> Legal Drop
+    const legalCells = this.state.cells.filter((cell) => {return cell.legal && !cell.tile;});
+    const unusedPlayerTiles = this.getUnusedTiles(player);
+    for (const unusedPlayerTile of unusedPlayerTiles) {
+      for (const cell of legalCells) {
+        if (this.isLegalDrop(cells, cell.index, unusedPlayerTile)) {
+          return true;
+        }
+      }
+    }
+    // none of the options (first drop, draw from bank, legal drop)
+    //  were available. Therefore, this player cannot make any valid move
+    return false;
   }
 
   isExistsPlayerThatCanPlay () {
@@ -372,12 +393,9 @@ class Game extends Component {
   }
 
   checkToEnableScrolling (event) {
-    //console.log('event.clientY', event.clientY);
     if (event.clientY < 250 || event.clientY > 500) {
       document.body.style['overflow-y'] = 'scroll';
     }
-
-    //console.log('event.clientX', event.clientX);
 
     if (event.clientX < 250 || event.clientX > 850) {
       document.body.style['overflow-x'] = 'scroll';
