@@ -1,7 +1,7 @@
 .game-details {
     display: grid;
     width: 300px;
-    height: 115px;
+    height: 117px;
     grid-template-columns: repeat(2, auto);
     grid-template-rows: repeat(2, auto);
     position: fixed;
@@ -14,7 +14,7 @@
     padding: 8px;
     transform: translate(-50%, 0);
     text-align: center;
-    grid-gap: 1px;
+    grid-gap: 3px;
 }
 
 .history-forward {
