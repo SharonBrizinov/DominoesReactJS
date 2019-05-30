@@ -1,5 +1,3 @@
-
-
 # Dominoes ReactJS
 ### Students
 - `Sharon Brizinov`   (sharonbrizinov at gmail .com) (ID in PDF file)
