@@ -1,7 +1,10 @@
 # Dominoes ReactJS
 ### Students
-- `Sharon Brizinov`   (sharonbrizinov at gmail .com) (ID in PDF file)
-- `Roie Koper`        (roiekoper at gmail .com) (ID in PDF file)
+- `Sharon Brizinov`
+- `Roie Koper`
+
+### Demo
+![Alt text](img/img.png "Demo")
 
 ### Game Mechanics
 - `Game` is where the main logic of the game takes place. This component controls all the players, the board, the bank with all tiles, and the drop logic of each dominoe tile on the board. In essence, the Game component will manage the entire application.
